@@ -1,8 +1,15 @@
 'use client';
 
-import { ChatWindow } from '@/components/chat';
+import { useRouter } from 'next/navigation';
+import { HybridLayout } from '@/components/estimate';
 
 export default function EstimatePage() {
+  const router = useRouter();
+
+  const handleSubmit = () => {
+    router.push('/estimate/confirm');
+  };
+
   return (
     <div className="h-[100dvh] flex flex-col">
       {/* 헤더 */}
@@ -10,9 +17,9 @@ export default function EstimatePage() {
         <h1 className="text-lg font-semibold">견적 신청</h1>
       </header>
 
-      {/* 채팅 영역 */}
+      {/* 하이브리드 레이아웃 (채팅 + 폼) */}
       <div className="flex-1 overflow-hidden">
-        <ChatWindow />
+        <HybridLayout onSubmit={handleSubmit} />
       </div>
     </div>
   );
