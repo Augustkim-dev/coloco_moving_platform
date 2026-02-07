@@ -273,7 +273,6 @@ export function FormSyncWrapper({ children }: FormSyncWrapperProps) {
   const schema = useEstimateStore((state) => state.schema);
   const mergeSchema = useEstimateStore((state) => state.mergeSchema);
   const lastUpdateSourceRef = useRef<'form' | 'store' | null>(null);
-  const isInitializedRef = useRef(false);
 
   const methods = useForm<EstimateFormData>({
     resolver: zodResolver(estimateFormSchema),
@@ -289,6 +288,7 @@ export function FormSyncWrapper({ children }: FormSyncWrapperProps) {
       return;
     }
 
+    lastUpdateSourceRef.current = 'store';
     const formData = schemaToFormData(schema);
     methods.reset(formData, { keepDirtyValues: false });
   }, [schema, methods]);
@@ -391,12 +391,13 @@ export function FormSyncWrapper({ children }: FormSyncWrapperProps) {
 
   // 폼 변경 감지
   useEffect(() => {
-    if (!isInitializedRef.current) {
-      isInitializedRef.current = true;
-      return;
-    }
-
     const subscription = methods.watch((data) => {
+      // 스토어에서 온 변경은 스킵
+      if (lastUpdateSourceRef.current === 'store') {
+        lastUpdateSourceRef.current = null;
+        return;
+      }
+
       if (data) {
         syncToStore(data as EstimateFormData);
       }

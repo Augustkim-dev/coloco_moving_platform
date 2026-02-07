@@ -244,7 +244,7 @@ export const useEstimateStore = create<EstimateState>()(
                   schema_data: schema,
                   phone: schema.contact.phone,
                   completion_rate: schema.status.completionRate,
-                  status: 'draft',
+                  status: schema.status.readyForSubmit ? 'submitted' : 'draft',
                 })
                 .select('id')
                 .single();
