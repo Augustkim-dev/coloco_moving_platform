@@ -12,6 +12,23 @@ import { useEstimateStore } from '@/stores/estimateStore';
 import type { EstimateFormData } from './FormSyncWrapper';
 import { CheckCircle, AlertCircle } from 'lucide-react';
 
+// 필드 경로를 한국어 라벨로 변환
+const FIELD_LABELS: Record<string, string> = {
+  'move.category': '주거 형태',
+  'move.type': '이사 형태',
+  'move.schedule': '이사 예정일',
+  'move.timeSlot': '시작 시간',
+  'departure.address': '출발지 주소',
+  'departure.floor': '출발지 층수',
+  'departure.hasElevator': '출발지 엘리베이터',
+  'departure.squareFootage': '출발지 평수',
+  'arrival.address': '도착지 주소',
+  'arrival.floor': '도착지 층수',
+  'arrival.hasElevator': '도착지 엘리베이터',
+  'contact.name': '이름',
+  'contact.phone': '연락처',
+};
+
 interface EstimateFormProps {
   onSubmit?: () => void;
 }
@@ -20,9 +37,14 @@ export function EstimateForm({ onSubmit }: EstimateFormProps) {
   const { handleSubmit } = useFormContext<EstimateFormData>();
   const engine = useEstimateStore((state) => state.engine);
 
-  const completionRate = engine.getCompletionRate();
+  const completionRate = engine.getCompletionRate() * 100; // 0~100으로 변환
   const canSubmit = engine.canSubmit();
   const missingFields = engine.getMissingRequiredFields();
+
+  // 누락 필드를 한국어 라벨로 변환
+  const missingFieldLabels = missingFields
+    .slice(0, 3)
+    .map((f) => FIELD_LABELS[f.field] || f.field);
 
   const handleFormSubmit = (data: EstimateFormData) => {
     console.log('Form submitted:', data);
@@ -47,7 +69,7 @@ export function EstimateForm({ onSubmit }: EstimateFormProps) {
           <div className="mt-2 flex items-start gap-2 text-xs text-muted-foreground">
             <AlertCircle className="h-3 w-3 mt-0.5 shrink-0" />
             <span>
-              필수 항목: {missingFields.slice(0, 3).join(', ')}
+              필수 항목: {missingFieldLabels.join(', ')}
               {missingFields.length > 3 && ` 외 ${missingFields.length - 3}개`}
             </span>
           </div>

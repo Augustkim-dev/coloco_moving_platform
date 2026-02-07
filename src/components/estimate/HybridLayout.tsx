@@ -32,7 +32,7 @@ export function HybridLayout({ onSubmit }: HybridLayoutProps) {
   const isMobile = useMediaQuery('(max-width: 768px)');
   const [activeTab, setActiveTab] = useState<'chat' | 'form'>('chat');
   const engine = useEstimateStore((state) => state.engine);
-  const completionRate = engine.getCompletionRate();
+  const completionRate = engine.getCompletionRate() * 100; // 0~100으로 변환
 
   if (isMobile) {
     return (
