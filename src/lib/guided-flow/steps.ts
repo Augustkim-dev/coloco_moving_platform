@@ -4,7 +4,7 @@
  * 16개의 질문 Step과 조건부 스킵 로직, TipCard 정의
  */
 
-import type { MovingSchema } from '@/types/schema';
+import type { MovingSchema, TransportMethod } from '@/types/schema';
 
 // ============================================
 // Step 관련 타입 정의
@@ -236,16 +236,27 @@ export const GUIDED_STEPS: GuidedStep[] = [
     required: true,
     tipCard: TIP_CARDS.ladder_truck,
     transform: (value, schema) => {
+      // 운반방식 결정
+      const transportMethod = value === 'yes' ? 'elevator' : value === 'no' ? 'stairs' : 'ladder';
       const updates: Partial<MovingSchema> = {
         departure: {
           ...schema.departure,
           hasElevator: value === 'ladder' ? 'no' : (value as 'yes' | 'no'),
+          transportMethod,
         },
       };
+      // 사다리차 선택 시 ladderTruck 설정, 그 외에는 도착지 사다리차 여부에 따라 설정
       if (value === 'ladder') {
         updates.services = {
           ...schema.services,
           ladderTruck: 'required',
+        };
+      } else {
+        // 엘리베이터나 계단 선택 시: 도착지가 사다리차가 아니면 ladderTruck 해제
+        const arrivalNeedsLadder = schema.arrival?.transportMethod === 'ladder';
+        updates.services = {
+          ...schema.services,
+          ladderTruck: arrivalNeedsLadder ? 'required' : 'not_required',
         };
       }
       return updates;
@@ -290,16 +301,27 @@ export const GUIDED_STEPS: GuidedStep[] = [
     schemaPath: 'arrival.hasElevator',
     required: true,
     transform: (value, schema) => {
+      // 운반방식 결정
+      const transportMethod = value === 'yes' ? 'elevator' : value === 'no' ? 'stairs' : 'ladder';
       const updates: Partial<MovingSchema> = {
         arrival: {
           ...schema.arrival,
           hasElevator: value === 'ladder' ? 'no' : (value as 'yes' | 'no'),
+          transportMethod,
         },
       };
-      if (value === 'ladder' && schema.services.ladderTruck !== 'required') {
+      // 사다리차 선택 시 ladderTruck 설정, 그 외에는 출발지 사다리차 여부에 따라 설정
+      if (value === 'ladder') {
         updates.services = {
           ...schema.services,
           ladderTruck: 'required',
+        };
+      } else {
+        // 엘리베이터나 계단 선택 시: 출발지가 사다리차가 아니면 ladderTruck 해제
+        const departureNeedsLadder = schema.departure?.transportMethod === 'ladder';
+        updates.services = {
+          ...schema.services,
+          ladderTruck: departureNeedsLadder ? 'required' : 'not_required',
         };
       }
       return updates;
@@ -433,7 +455,7 @@ export const GUIDED_STEPS: GuidedStep[] = [
       const phoneMatch = text.match(/01[0-9][-\s]?\d{3,4}[-\s]?\d{4}/);
       const phone = phoneMatch ? phoneMatch[0].replace(/[-\s]/g, '') : null;
       // 전화번호를 제외한 나머지를 이름으로
-      const name = phone ? text.replace(phoneMatch[0], '').replace(/[,\s]+/g, ' ').trim() : text;
+      const name = phoneMatch ? text.replace(phoneMatch[0], '').replace(/[,\s]+/g, ' ').trim() : text;
 
       return {
         contact: {

@@ -88,6 +88,9 @@ export type ConfidenceSource = 'guided' | 'chat' | 'form' | 'system';
 /** 트럭 대수 선호 */
 export type VehiclePreference = '1' | '2' | 'unknown';
 
+/** 운반 방식 */
+export type TransportMethod = 'elevator' | 'stairs' | 'ladder' | 'unknown';
+
 // ============================================
 // 보조 인터페이스
 // ============================================
@@ -159,6 +162,7 @@ export interface LocationInfo {
   floor: number | null; // -1=지하, 0=반지하, 1~99=해당 층
   floorStatus: FloorStatus;
   hasElevator: YesNoUnknown;
+  transportMethod: TransportMethod; // 운반 방식 (엘리베이터/계단/사다리차)
   parking: YesNoUnknown;
   squareFootage: SquareFootage | null;
 }
@@ -273,6 +277,7 @@ function createEmptyLocation(): LocationInfo {
     floor: null,
     floorStatus: 'unknown',
     hasElevator: 'unknown',
+    transportMethod: 'unknown',
     parking: 'unknown',
     squareFootage: null,
   };

@@ -233,9 +233,9 @@ function schemaToFormData(schema: MovingSchema): EstimateFormData {
     services: {
       ladderTruck: {
         needed: schema.services?.ladderTruck === 'required',
-        // 사다리차가 필요하고 해당 위치의 엘리베이터가 'no'면 사다리차 선택으로 간주
-        departure: schema.services?.ladderTruck === 'required' && schema.departure?.hasElevator === 'no',
-        arrival: schema.services?.ladderTruck === 'required' && schema.arrival?.hasElevator === 'no',
+        // transportMethod로 각 위치의 사다리차 선택 여부 판단
+        departure: schema.departure?.transportMethod === 'ladder',
+        arrival: schema.arrival?.transportMethod === 'ladder',
       },
       airconInstall: {
         needed: schema.services?.airconInstall?.needed ?? false,
@@ -319,6 +319,17 @@ export function FormSyncWrapper({ children }: FormSyncWrapperProps) {
 
       const dateType: DateType = data.move.schedule ? 'exact' : 'unknown';
 
+      // 운반방식 결정 헬퍼
+      const getTransportMethod = (
+        hasElevator: boolean | null,
+        isLadder: boolean
+      ): 'elevator' | 'stairs' | 'ladder' | 'unknown' => {
+        if (isLadder) return 'ladder';
+        if (hasElevator === true) return 'elevator';
+        if (hasElevator === false) return 'stairs';
+        return 'unknown';
+      };
+
       return {
         move: {
           category: data.move.category || 'unknown',
@@ -337,6 +348,10 @@ export function FormSyncWrapper({ children }: FormSyncWrapperProps) {
           floor: data.departure.floor,
           floorStatus: data.departure.floor !== null ? 'known' : 'unknown',
           hasElevator: booleanToYesNo(data.departure.hasElevator),
+          transportMethod: getTransportMethod(
+            data.departure.hasElevator,
+            data.services.ladderTruck.departure
+          ),
           parking: booleanToYesNo(data.departure.parkingAvailable),
           squareFootage: numberToSquareFootage(data.departure.squareFootage),
         },
@@ -346,6 +361,10 @@ export function FormSyncWrapper({ children }: FormSyncWrapperProps) {
           floor: data.arrival.floor,
           floorStatus: data.arrival.floor !== null ? 'known' : 'unknown',
           hasElevator: booleanToYesNo(data.arrival.hasElevator),
+          transportMethod: getTransportMethod(
+            data.arrival.hasElevator,
+            data.services.ladderTruck.arrival
+          ),
           parking: booleanToYesNo(data.arrival.parkingAvailable),
           squareFootage: numberToSquareFootage(data.arrival.squareFootage),
         },

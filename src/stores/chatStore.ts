@@ -203,10 +203,10 @@ export const useChatStore = create<ChatState>()(
         });
 
         // 2. 스키마 업데이트 (estimateStore의 engine 사용)
-        estimateStore.engine.processAnswer(stepId, value);
+        const updatedSchema = estimateStore.engine.processAnswer(stepId, value);
 
         // 3. estimateStore 동기화
-        estimateStore.setSchema(estimateStore.engine.getSchema());
+        estimateStore.setSchema(updatedSchema);
 
         // 4. Step 완료 처리
         set((state) => ({
