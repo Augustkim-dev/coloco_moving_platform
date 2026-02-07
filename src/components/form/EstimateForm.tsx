@@ -5,6 +5,7 @@ import { MoveSection } from './MoveSection';
 import { LocationSection } from './LocationSection';
 import { CargoSection } from './CargoSection';
 import { ServicesSection } from './ServicesSection';
+import { ConditionsSection } from './ConditionsSection';
 import { ContactSection } from './ContactSection';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
@@ -90,6 +91,9 @@ export function EstimateForm({ onSubmit }: EstimateFormProps) {
 
       {/* 부가 서비스 */}
       <ServicesSection />
+
+      {/* 기타 조건 */}
+      <ConditionsSection />
 
       {/* 연락처 */}
       <ContactSection />

@@ -233,8 +233,9 @@ function schemaToFormData(schema: MovingSchema): EstimateFormData {
     services: {
       ladderTruck: {
         needed: schema.services?.ladderTruck === 'required',
-        departure: false,
-        arrival: false,
+        // 사다리차가 필요하고 해당 위치의 엘리베이터가 'no'면 사다리차 선택으로 간주
+        departure: schema.services?.ladderTruck === 'required' && schema.departure?.hasElevator === 'no',
+        arrival: schema.services?.ladderTruck === 'required' && schema.arrival?.hasElevator === 'no',
       },
       airconInstall: {
         needed: schema.services?.airconInstall?.needed ?? false,

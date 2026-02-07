@@ -4,7 +4,8 @@ import { useFormContext } from 'react-hook-form';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { Toggle } from '@/components/ui/toggle';
+import { Button } from '@/components/ui/button';
+import { Switch } from '@/components/ui/switch';
 import {
   Select,
   SelectContent,
@@ -13,7 +14,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import type { EstimateFormData } from './FormSyncWrapper';
-import { Wrench, Truck, Wind, Sparkles, Warehouse, Trash2 } from 'lucide-react';
+import { Wrench, Wind, Sparkles, Warehouse, Trash2 } from 'lucide-react';
 
 export function ServicesSection() {
   const { watch, setValue } = useFormContext<EstimateFormData>();
@@ -29,58 +30,6 @@ export function ServicesSection() {
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        {/* 사다리차 */}
-        <div className="flex items-start justify-between gap-4 py-3 border-b">
-          <div className="flex items-start gap-3">
-            <Truck className="h-5 w-5 text-muted-foreground mt-0.5" />
-            <div>
-              <Label className="text-sm font-medium">사다리차</Label>
-              <p className="text-xs text-muted-foreground mt-0.5">
-                엘리베이터 이용 불가 시 필요
-              </p>
-            </div>
-          </div>
-          <Toggle
-            pressed={services?.ladderTruck?.needed || false}
-            onPressedChange={(pressed) =>
-              setValue('services.ladderTruck', {
-                ...services?.ladderTruck,
-                needed: pressed,
-              })
-            }
-            aria-label="사다리차 필요 여부"
-          />
-        </div>
-
-        {services?.ladderTruck?.needed && (
-          <div className="pl-8 space-y-2">
-            <div className="flex gap-4">
-              <label className="flex items-center gap-2 text-sm">
-                <input
-                  type="checkbox"
-                  checked={services?.ladderTruck?.departure || false}
-                  onChange={(e) =>
-                    setValue('services.ladderTruck.departure', e.target.checked)
-                  }
-                  className="rounded"
-                />
-                출발지
-              </label>
-              <label className="flex items-center gap-2 text-sm">
-                <input
-                  type="checkbox"
-                  checked={services?.ladderTruck?.arrival || false}
-                  onChange={(e) =>
-                    setValue('services.ladderTruck.arrival', e.target.checked)
-                  }
-                  className="rounded"
-                />
-                도착지
-              </label>
-            </div>
-          </div>
-        )}
-
         {/* 에어컨 설치 */}
         <div className="flex items-start justify-between gap-4 py-3 border-b">
           <div className="flex items-start gap-3">
@@ -92,15 +41,14 @@ export function ServicesSection() {
               </p>
             </div>
           </div>
-          <Toggle
-            pressed={services?.airconInstall?.needed || false}
-            onPressedChange={(pressed) =>
+          <Switch
+            checked={services?.airconInstall?.needed || false}
+            onCheckedChange={(checked) =>
               setValue('services.airconInstall', {
                 ...services?.airconInstall,
-                needed: pressed,
+                needed: checked,
               })
             }
-            aria-label="에어컨 설치 필요 여부"
           />
         </div>
 
@@ -134,15 +82,14 @@ export function ServicesSection() {
               </p>
             </div>
           </div>
-          <Toggle
-            pressed={services?.cleaning?.needed || false}
-            onPressedChange={(pressed) =>
+          <Switch
+            checked={services?.cleaning?.needed || false}
+            onCheckedChange={(checked) =>
               setValue('services.cleaning', {
                 ...services?.cleaning,
-                needed: pressed,
+                needed: checked,
               })
             }
-            aria-label="청소 서비스 필요 여부"
           />
         </div>
 
@@ -175,15 +122,14 @@ export function ServicesSection() {
               </p>
             </div>
           </div>
-          <Toggle
-            pressed={services?.storage?.needed || false}
-            onPressedChange={(pressed) =>
+          <Switch
+            checked={services?.storage?.needed || false}
+            onCheckedChange={(checked) =>
               setValue('services.storage', {
                 ...services?.storage,
-                needed: pressed,
+                needed: checked,
               })
             }
-            aria-label="보관 서비스 필요 여부"
           />
         </div>
 
@@ -220,15 +166,14 @@ export function ServicesSection() {
               </p>
             </div>
           </div>
-          <Toggle
-            pressed={services?.disposal?.needed || false}
-            onPressedChange={(pressed) =>
+          <Switch
+            checked={services?.disposal?.needed || false}
+            onCheckedChange={(checked) =>
               setValue('services.disposal', {
                 ...services?.disposal,
-                needed: pressed,
+                needed: checked,
               })
             }
-            aria-label="폐기물 처리 필요 여부"
           />
         </div>
       </CardContent>

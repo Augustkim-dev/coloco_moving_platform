@@ -5,9 +5,21 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { CheckCircle2, Home, Phone, MessageCircle } from 'lucide-react';
+import { useEstimateStore } from '@/stores/estimateStore';
+import { useChatStore } from '@/stores/chatStore';
 
 export default function EstimateCompletePage() {
   const router = useRouter();
+  const resetSchema = useEstimateStore((state) => state.resetSchema);
+  const clearChat = useChatStore((state) => state.clearChat);
+
+  const handleNewEstimate = () => {
+    // 스토어 초기화
+    resetSchema();
+    clearChat();
+    // 새 견적 페이지로 이동
+    router.push('/estimate');
+  };
 
   // 직접 접근 방지 (나중에 상태 확인 로직 추가 가능)
   useEffect(() => {
@@ -70,7 +82,7 @@ export default function EstimateCompletePage() {
             <Button
               variant="outline"
               className="w-full"
-              onClick={() => router.push('/estimate')}
+              onClick={handleNewEstimate}
             >
               새 견적 요청하기
             </Button>

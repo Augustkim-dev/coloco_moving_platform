@@ -13,11 +13,13 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import type { EstimateFormData } from './FormSyncWrapper';
-import { MapPin } from 'lucide-react';
+import { MapPin, Truck } from 'lucide-react';
 
 interface LocationSectionProps {
   type: 'departure' | 'arrival';
 }
+
+type TransportMethod = 'elevator' | 'stairs' | 'ladder';
 
 const SQUARE_FOOTAGE_OPTIONS = [
   { value: 10, label: '10평 미만' },
@@ -37,6 +39,47 @@ export function LocationSection({ type }: LocationSectionProps) {
 
   // 출발지/도착지 데이터 직접 접근
   const locationData = watch(type);
+  const ladderTruck = watch('services.ladderTruck');
+
+  // 현재 운반 방식 결정
+  const getTransportMethod = (): TransportMethod | null => {
+    const isLadderSelected = type === 'departure'
+      ? ladderTruck?.departure
+      : ladderTruck?.arrival;
+
+    if (isLadderSelected) return 'ladder';
+    if (locationData?.hasElevator === true) return 'elevator';
+    if (locationData?.hasElevator === false) return 'stairs';
+    return null;
+  };
+
+  const handleTransportMethodChange = (method: TransportMethod) => {
+    if (method === 'ladder') {
+      // 사다리차 선택: hasElevator를 false로, ladderTruck 설정
+      setValue(`${type}.hasElevator`, false);
+      setValue('services.ladderTruck.needed', true);
+      setValue(`services.ladderTruck.${type}`, true);
+    } else if (method === 'elevator') {
+      // 엘리베이터 선택
+      setValue(`${type}.hasElevator`, true);
+      setValue(`services.ladderTruck.${type}`, false);
+      // 둘 다 false면 needed도 false
+      const otherType = type === 'departure' ? 'arrival' : 'departure';
+      if (!ladderTruck?.[otherType]) {
+        setValue('services.ladderTruck.needed', false);
+      }
+    } else {
+      // 계단 선택
+      setValue(`${type}.hasElevator`, false);
+      setValue(`services.ladderTruck.${type}`, false);
+      const otherType = type === 'departure' ? 'arrival' : 'departure';
+      if (!ladderTruck?.[otherType]) {
+        setValue('services.ladderTruck.needed', false);
+      }
+    }
+  };
+
+  const currentMethod = getTransportMethod();
 
   const handleAddressSearch = () => {
     // TODO: 카카오 주소 검색 연동
@@ -106,22 +149,32 @@ export function LocationSection({ type }: LocationSectionProps) {
         {/* 운반 방식 */}
         <div className="space-y-2">
           <Label>운반 방식</Label>
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-3 gap-2">
             <Button
               type="button"
-              variant={locationData?.hasElevator === true ? 'default' : 'outline'}
+              variant={currentMethod === 'elevator' ? 'default' : 'outline'}
               size="sm"
-              onClick={() => setValue(`${type}.hasElevator`, true)}
+              onClick={() => handleTransportMethodChange('elevator')}
             >
               엘리베이터
             </Button>
             <Button
               type="button"
-              variant={locationData?.hasElevator === false ? 'default' : 'outline'}
+              variant={currentMethod === 'stairs' ? 'default' : 'outline'}
               size="sm"
-              onClick={() => setValue(`${type}.hasElevator`, false)}
+              onClick={() => handleTransportMethodChange('stairs')}
             >
               계단
+            </Button>
+            <Button
+              type="button"
+              variant={currentMethod === 'ladder' ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => handleTransportMethodChange('ladder')}
+              className="flex items-center gap-1"
+            >
+              <Truck className="h-3 w-3" />
+              사다리차
             </Button>
           </div>
         </div>

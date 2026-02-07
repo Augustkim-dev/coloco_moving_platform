@@ -1,7 +1,7 @@
 /**
  * 가이드 대화 시스템 - Step 정의
  *
- * 15개의 질문 Step과 조건부 스킵 로직, TipCard 정의
+ * 16개의 질문 Step과 조건부 스킵 로직, TipCard 정의
  */
 
 import type { MovingSchema } from '@/types/schema';
@@ -100,7 +100,7 @@ export const TIP_CARDS: Record<string, TipCard> = {
 };
 
 // ============================================
-// 15개 가이드 Step 정의
+// 16개 가이드 Step 정의
 // ============================================
 
 export const GUIDED_STEPS: GuidedStep[] = [
@@ -116,10 +116,30 @@ export const GUIDED_STEPS: GuidedStep[] = [
     tipCard: TIP_CARDS.peak_season,
   },
 
-  // Step 2: 현재 평수
+  // Step 2: 주거형태
+  {
+    id: 'move_category',
+    stepNumber: 2,
+    question: '현재 주거 형태가 어떻게 되나요?',
+    description: '이사할 곳의 형태를 선택해주세요',
+    inputType: 'card',
+    options: [
+      { label: '원룸', value: 'one_room', description: '원룸, 고시원' },
+      { label: '투룸', value: 'two_room', description: '방 2개' },
+      { label: '쓰리룸 이상', value: 'three_room_plus', description: '방 3개 이상' },
+      { label: '오피스텔', value: 'officetel', description: '오피스텔' },
+      { label: '아파트', value: 'apartment', description: '아파트' },
+      { label: '빌라/주택', value: 'villa_house', description: '빌라, 연립, 단독주택' },
+      { label: '사무실', value: 'office', description: '사무실, 상가' },
+    ],
+    schemaPath: 'move.category',
+    required: true,
+  },
+
+  // Step 3: 현재 평수
   {
     id: 'square_footage',
-    stepNumber: 2,
+    stepNumber: 3,
     question: '현재 살고 계신 곳의 평수는 어떻게 되나요?',
     inputType: 'select',
     options: [
@@ -135,10 +155,10 @@ export const GUIDED_STEPS: GuidedStep[] = [
     required: true,
   },
 
-  // Step 3: 이사 형태
+  // Step 4: 이사 형태
   {
     id: 'move_type',
-    stepNumber: 3,
+    stepNumber: 4,
     question: '어떤 이사를 원하시나요?',
     description: '서비스 범위에 따라 가격이 달라져요',
     inputType: 'card',
@@ -172,10 +192,10 @@ export const GUIDED_STEPS: GuidedStep[] = [
     required: true,
   },
 
-  // Step 4: 시작 시간
+  // Step 5: 시작 시간
   {
     id: 'time_slot',
-    stepNumber: 4,
+    stepNumber: 5,
     question: '이사 시작 시간대를 선택해주세요',
     inputType: 'button_list',
     options: [
@@ -189,10 +209,10 @@ export const GUIDED_STEPS: GuidedStep[] = [
     required: true,
   },
 
-  // Step 5: 출발지 주소
+  // Step 6: 출발지 주소
   {
     id: 'departure_address',
-    stepNumber: 5,
+    stepNumber: 6,
     question: '출발지 주소를 알려주세요',
     description: '짐을 가져갈 현재 주소예요',
     inputType: 'address',
@@ -201,10 +221,10 @@ export const GUIDED_STEPS: GuidedStep[] = [
     placeholder: '주소 검색 (예: 강남구 역삼동)',
   },
 
-  // Step 6: 출발지 운반 방식
+  // Step 7: 출발지 운반 방식
   {
     id: 'departure_elevator',
-    stepNumber: 6,
+    stepNumber: 7,
     question: '출발지에서 짐을 어떻게 운반하나요?',
     inputType: 'button_list',
     options: [
@@ -232,10 +252,10 @@ export const GUIDED_STEPS: GuidedStep[] = [
     },
   },
 
-  // Step 7: 출발지 층수
+  // Step 8: 출발지 층수
   {
     id: 'departure_floor',
-    stepNumber: 7,
+    stepNumber: 8,
     question: '출발지는 몇 층인가요?',
     description: '지하는 -1, 반지하는 0으로 입력해주세요',
     inputType: 'number',
@@ -244,10 +264,10 @@ export const GUIDED_STEPS: GuidedStep[] = [
     placeholder: '층수 입력',
   },
 
-  // Step 8: 도착지 주소
+  // Step 9: 도착지 주소
   {
     id: 'arrival_address',
-    stepNumber: 8,
+    stepNumber: 9,
     question: '도착지 주소를 알려주세요',
     description: '짐을 옮길 새 주소예요',
     inputType: 'address',
@@ -256,10 +276,10 @@ export const GUIDED_STEPS: GuidedStep[] = [
     placeholder: '주소 검색 (예: 마포구 합정동)',
   },
 
-  // Step 9: 도착지 운반 방식
+  // Step 10: 도착지 운반 방식
   {
     id: 'arrival_elevator',
-    stepNumber: 9,
+    stepNumber: 10,
     question: '도착지에서 짐을 어떻게 운반하나요?',
     inputType: 'button_list',
     options: [
@@ -286,10 +306,10 @@ export const GUIDED_STEPS: GuidedStep[] = [
     },
   },
 
-  // Step 10: 도착지 층수
+  // Step 11: 도착지 층수
   {
     id: 'arrival_floor',
-    stepNumber: 10,
+    stepNumber: 11,
     question: '도착지는 몇 층인가요?',
     description: '지하는 -1, 반지하는 0으로 입력해주세요',
     inputType: 'number',
@@ -298,10 +318,10 @@ export const GUIDED_STEPS: GuidedStep[] = [
     placeholder: '층수 입력',
   },
 
-  // Step 11: 트럭 대수 (용달/일반이사만)
+  // Step 12: 트럭 대수 (용달/일반이사만)
   {
     id: 'vehicle_preference',
-    stepNumber: 11,
+    stepNumber: 12,
     question: '트럭은 몇 대가 필요하실까요?',
     description: '짐 양에 따라 선택해주세요',
     inputType: 'button_list',
@@ -317,12 +337,18 @@ export const GUIDED_STEPS: GuidedStep[] = [
       schema.move.type === 'full_pack' ||
       schema.move.type === 'half_pack' ||
       schema.move.type === 'storage',
+    transform: (value, schema) => ({
+      conditions: {
+        ...schema.conditions,
+        vehiclePreference: value as '1' | '2' | 'unknown',
+      },
+    }),
   },
 
-  // Step 12: 작업인원 (용달/일반이사만)
+  // Step 13: 작업인원 (용달/일반이사만)
   {
     id: 'customer_participation',
-    stepNumber: 12,
+    stepNumber: 13,
     question: '짐 운반을 함께 도와주실 수 있나요?',
     description: '무거운 가구를 함께 옮기면 비용이 절약돼요',
     inputType: 'button_list',
@@ -337,19 +363,18 @@ export const GUIDED_STEPS: GuidedStep[] = [
       schema.move.type === 'full_pack' ||
       schema.move.type === 'half_pack' ||
       schema.move.type === 'storage',
-    transform: (value) => ({
+    transform: (value, schema) => ({
       conditions: {
+        ...schema.conditions,
         customerParticipation: value === 'true',
-        extraRequests: null,
-        vehiclePreference: null,
       },
     }),
   },
 
-  // Step 13: 짐 상세 & 요청사항
+  // Step 14: 짐 상세 & 요청사항
   {
     id: 'extra_requests',
-    stepNumber: 13,
+    stepNumber: 14,
     question: '짐 정보나 요청사항을 자유롭게 적어주세요',
     description: '냉장고, 세탁기, 침대 등 주요 짐과 특별히 조심해야 할 물건이 있다면 알려주세요',
     inputType: 'text',
@@ -358,10 +383,10 @@ export const GUIDED_STEPS: GuidedStep[] = [
     placeholder: '예: 냉장고 양문형 1대, 드럼세탁기 1대, 퀸침대 1개 있어요. 피아노는 따로 문의드릴게요.',
   },
 
-  // Step 14: 부가 서비스 (포장/반포장만)
+  // Step 15: 부가 서비스 (포장/반포장만)
   {
     id: 'additional_services',
-    stepNumber: 14,
+    stepNumber: 15,
     question: '추가로 필요한 서비스가 있으신가요?',
     description: '선택하지 않아도 괜찮아요',
     inputType: 'toggle_list',
@@ -374,17 +399,50 @@ export const GUIDED_STEPS: GuidedStep[] = [
     schemaPath: 'services',
     required: false,
     skipCondition: (schema) => schema.move.type === 'truck',
+    transform: (value, schema) => {
+      // value는 선택된 서비스의 배열: ['airconInstall', 'disposal', ...]
+      const selectedServices = Array.isArray(value) ? value : [];
+      return {
+        services: {
+          ...schema.services,
+          airconInstall: {
+            ...schema.services.airconInstall,
+            needed: selectedServices.includes('airconInstall'),
+          },
+          cleaning: selectedServices.includes('cleaning'),
+          organizing: selectedServices.includes('organizing'),
+          disposal: selectedServices.includes('disposal'),
+        },
+      };
+    },
   },
 
-  // Step 15: 본인 인증
+  // Step 16: 본인 인증
   {
     id: 'contact_verification',
-    stepNumber: 15,
+    stepNumber: 16,
     question: '마지막으로 연락처를 확인해주세요',
     description: '견적을 받으실 연락처를 인증해주세요',
     inputType: 'phone_verify',
     schemaPath: 'contact',
     required: true,
+    transform: (value, schema) => {
+      // value는 "이름, 전화번호" 형식의 문자열
+      const text = String(value).trim();
+      // 전화번호 패턴 추출 (010-xxxx-xxxx 또는 01012345678)
+      const phoneMatch = text.match(/01[0-9][-\s]?\d{3,4}[-\s]?\d{4}/);
+      const phone = phoneMatch ? phoneMatch[0].replace(/[-\s]/g, '') : null;
+      // 전화번호를 제외한 나머지를 이름으로
+      const name = phone ? text.replace(phoneMatch[0], '').replace(/[,\s]+/g, ' ').trim() : text;
+
+      return {
+        contact: {
+          ...schema.contact,
+          name: name || schema.contact.name,
+          phone: phone ? phone.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3') : schema.contact.phone,
+        },
+      };
+    },
   },
 ];
 
