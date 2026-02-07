@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 import { cn } from '@/lib/utils';
 import { useChatStore } from '@/stores/chatStore';
 import { useEstimateStore } from '@/stores/estimateStore';
@@ -17,6 +17,9 @@ interface ChatWindowProps {
 
 export function ChatWindow({ className }: ChatWindowProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const stepInputRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const prevMessagesLengthRef = useRef(0);
 
   const {
     messages,
@@ -29,17 +32,29 @@ export function ChatWindow({ className }: ChatWindowProps) {
   } = useChatStore();
 
   const { schema, canSubmit } = useEstimateStore();
-  const completionRate = schema.status.completionRate;
+  const completionRate = schema.status?.completionRate ?? 0;
 
   // 초기화
   useEffect(() => {
     initializeChat();
   }, [initializeChat]);
 
-  // 스크롤 하단 유지
+  // 스크롤 처리 (새 메시지 추가 시에만 스크롤)
+  const scrollToBottom = useCallback(() => {
+    // 스크롤 컨테이너 내에서 하단으로 스크롤
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTop = scrollContainerRef.current.scrollHeight;
+    }
+  }, []);
+
+  // 새 메시지 추가 시에만 스크롤
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+    if (messages.length > prevMessagesLengthRef.current) {
+      // 짧은 딜레이 후 스크롤 (DOM 업데이트 대기)
+      setTimeout(scrollToBottom, 100);
+    }
+    prevMessagesLengthRef.current = messages.length;
+  }, [messages.length, scrollToBottom]);
 
   // 현재 Step
   const currentStep = currentStepId ? getStepById(currentStepId) : null;
@@ -79,7 +94,7 @@ export function ChatWindow({ className }: ChatWindowProps) {
       </div>
 
       {/* 메시지 영역 */}
-      <div className="flex-1 overflow-y-auto px-4 py-4 space-y-1">
+      <div ref={scrollContainerRef} className="flex-1 overflow-y-auto px-4 py-4 space-y-1">
         {messages.map((message) => (
           <ChatBubble
             key={message.id}
@@ -90,7 +105,7 @@ export function ChatWindow({ className }: ChatWindowProps) {
 
         {/* Step 입력 UI */}
         {showStepInput && currentStep && (
-          <div className="mt-4 mb-2">
+          <div ref={stepInputRef} className="mt-4 mb-2">
             <GuidedStepRenderer step={currentStep} onAnswer={handleAnswer} />
           </div>
         )}

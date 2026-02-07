@@ -146,14 +146,14 @@ interface FormSyncWrapperProps {
 // MovingSchema를 FormData로 변환 (스키마 구조가 다르므로 변환 필요)
 function schemaToFormData(schema: MovingSchema): EstimateFormData {
   // 스키마의 hasElevator (YesNoUnknown)를 boolean으로 변환
-  const elevatorToBoolean = (value: string | null): boolean | null => {
+  const elevatorToBoolean = (value: string | null | undefined): boolean | null => {
     if (value === 'yes') return true;
     if (value === 'no') return false;
     return null;
   };
 
   // 스키마의 squareFootage (string)를 number로 변환
-  const squareFootageToNumber = (value: string | null): number | null => {
+  const squareFootageToNumber = (value: string | null | undefined): number | null => {
     if (!value || value === 'unknown') return null;
     const mapping: Record<string, number> = {
       under_10: 10,
@@ -166,59 +166,59 @@ function schemaToFormData(schema: MovingSchema): EstimateFormData {
     return mapping[value] || null;
   };
 
-  // 가전/가구 목록 추출
+  // 가전/가구 목록 추출 (안전한 접근)
   const appliances: string[] = [];
   const furniture: string[] = [];
 
-  // 가전제품 목록 생성
-  if (schema.cargo.appliances.refrigerator.has) appliances.push('냉장고');
-  if (schema.cargo.appliances.washer.has) appliances.push('세탁기');
-  if (schema.cargo.appliances.tv.has) appliances.push('TV');
-  if (schema.cargo.appliances.airConditioner.has) appliances.push('에어컨');
-  if (schema.cargo.appliances.dryer.has) appliances.push('건조기');
-  if (schema.cargo.appliances.dishwasher.has) appliances.push('식기세척기');
+  // 가전제품 목록 생성 (optional chaining 사용)
+  if (schema.cargo?.appliances?.refrigerator?.has) appliances.push('냉장고');
+  if (schema.cargo?.appliances?.washer?.has) appliances.push('세탁기');
+  if (schema.cargo?.appliances?.tv?.has) appliances.push('TV');
+  if (schema.cargo?.appliances?.airConditioner?.has) appliances.push('에어컨');
+  if (schema.cargo?.appliances?.dryer?.has) appliances.push('건조기');
+  if (schema.cargo?.appliances?.dishwasher?.has) appliances.push('식기세척기');
 
-  // 가구 목록 생성
-  if (schema.cargo.furniture.bed.has) furniture.push('침대');
-  if (schema.cargo.furniture.wardrobe.has) furniture.push('옷장');
-  if (schema.cargo.furniture.sofa.has) furniture.push('소파');
-  if (schema.cargo.furniture.desk.has) furniture.push('책상');
-  if (schema.cargo.furniture.bookshelf.has) furniture.push('책장');
-  if (schema.cargo.furniture.diningTable.has) furniture.push('식탁');
+  // 가구 목록 생성 (optional chaining 사용)
+  if (schema.cargo?.furniture?.bed?.has) furniture.push('침대');
+  if (schema.cargo?.furniture?.wardrobe?.has) furniture.push('옷장');
+  if (schema.cargo?.furniture?.sofa?.has) furniture.push('소파');
+  if (schema.cargo?.furniture?.desk?.has) furniture.push('책상');
+  if (schema.cargo?.furniture?.bookshelf?.has) furniture.push('책장');
+  if (schema.cargo?.furniture?.diningTable?.has) furniture.push('식탁');
 
-  // 특수품목 목록 생성
+  // 특수품목 목록 생성 (optional chaining 사용)
   const special: string[] = [];
-  if (schema.cargo.special.piano.has) special.push('피아노');
-  if (schema.cargo.special.stoneBed.has) special.push('돌침대');
-  if (schema.cargo.special.safe.has) special.push('금고');
-  if (schema.cargo.special.aquarium.has) special.push('대형 어항');
+  if (schema.cargo?.special?.piano?.has) special.push('피아노');
+  if (schema.cargo?.special?.stoneBed?.has) special.push('돌침대');
+  if (schema.cargo?.special?.safe?.has) special.push('금고');
+  if (schema.cargo?.special?.aquarium?.has) special.push('대형 어항');
 
   return {
     move: {
-      category: schema.move.category as MoveCategory | null,
-      type: schema.move.type as MoveType | null,
-      schedule: schema.move.schedule.date,
-      timeSlot: schema.move.timeSlot as TimeSlot | null,
+      category: (schema.move?.category as MoveCategory) || null,
+      type: (schema.move?.type as MoveType) || null,
+      schedule: schema.move?.schedule?.date || null,
+      timeSlot: (schema.move?.timeSlot as TimeSlot) || null,
     },
     departure: {
-      address: schema.departure.address,
-      addressDetail: schema.departure.detailAddress,
-      floor: schema.departure.floor,
-      hasElevator: elevatorToBoolean(schema.departure.hasElevator),
+      address: schema.departure?.address || null,
+      addressDetail: schema.departure?.detailAddress || null,
+      floor: schema.departure?.floor ?? null,
+      hasElevator: elevatorToBoolean(schema.departure?.hasElevator),
       canUseStairs: null,
-      parkingAvailable: elevatorToBoolean(schema.departure.parking),
+      parkingAvailable: elevatorToBoolean(schema.departure?.parking),
       parkingDistance: null,
-      squareFootage: squareFootageToNumber(schema.departure.squareFootage),
+      squareFootage: squareFootageToNumber(schema.departure?.squareFootage),
     },
     arrival: {
-      address: schema.arrival.address,
-      addressDetail: schema.arrival.detailAddress,
-      floor: schema.arrival.floor,
-      hasElevator: elevatorToBoolean(schema.arrival.hasElevator),
+      address: schema.arrival?.address || null,
+      addressDetail: schema.arrival?.detailAddress || null,
+      floor: schema.arrival?.floor ?? null,
+      hasElevator: elevatorToBoolean(schema.arrival?.hasElevator),
       canUseStairs: null,
-      parkingAvailable: elevatorToBoolean(schema.arrival.parking),
+      parkingAvailable: elevatorToBoolean(schema.arrival?.parking),
       parkingDistance: null,
-      squareFootage: squareFootageToNumber(schema.arrival.squareFootage),
+      squareFootage: squareFootageToNumber(schema.arrival?.squareFootage),
     },
     cargo: {
       appliances,
@@ -227,44 +227,44 @@ function schemaToFormData(schema: MovingSchema): EstimateFormData {
       boxes: {
         small: 0,
         medium: 0,
-        large: schema.cargo.boxes.exactCount || 0,
+        large: schema.cargo?.boxes?.exactCount || 0,
       },
     },
     services: {
       ladderTruck: {
-        needed: schema.services.ladderTruck === 'required',
+        needed: schema.services?.ladderTruck === 'required',
         departure: false,
         arrival: false,
       },
       airconInstall: {
-        needed: schema.services.airconInstall.needed,
-        count: schema.services.airconInstall.qty,
+        needed: schema.services?.airconInstall?.needed ?? false,
+        count: schema.services?.airconInstall?.qty ?? 0,
       },
       cleaning: {
-        needed: schema.services.cleaning,
+        needed: schema.services?.cleaning ?? false,
         type: null,
       },
       storage: {
-        needed: schema.services.storage.needed,
-        duration: schema.services.storage.durationDays > 0
-          ? `${schema.services.storage.durationDays}days`
+        needed: schema.services?.storage?.needed ?? false,
+        duration: (schema.services?.storage?.durationDays ?? 0) > 0
+          ? `${schema.services?.storage?.durationDays}days`
           : null,
       },
       disposal: {
-        needed: schema.services.disposal,
+        needed: schema.services?.disposal ?? false,
         items: [],
       },
     },
     conditions: {
-      extraRequests: schema.conditions.extraRequests,
-      vehiclePreference: schema.conditions.vehiclePreference,
-      customerParticipation: schema.conditions.customerParticipation,
+      extraRequests: schema.conditions?.extraRequests || null,
+      vehiclePreference: schema.conditions?.vehiclePreference || null,
+      customerParticipation: schema.conditions?.customerParticipation ?? null,
     },
     contact: {
-      name: schema.contact.name,
-      phone: schema.contact.phone,
-      carrier: schema.contact.carrier as Carrier | null,
-      preferredContactTime: schema.contact.preferredTime,
+      name: schema.contact?.name || null,
+      phone: schema.contact?.phone || null,
+      carrier: (schema.contact?.carrier as Carrier) || null,
+      preferredContactTime: schema.contact?.preferredTime || null,
     },
   };
 }
