@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef, useCallback, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { useChatStore } from '@/stores/chatStore';
 import { useEstimateStore } from '@/stores/estimateStore';
@@ -20,6 +20,7 @@ export function ChatWindow({ className }: ChatWindowProps) {
   const stepInputRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const prevMessagesLengthRef = useRef(0);
+  const [hasMounted, setHasMounted] = useState(false);
 
   const {
     messages,
@@ -33,6 +34,11 @@ export function ChatWindow({ className }: ChatWindowProps) {
 
   const { schema, canSubmit } = useEstimateStore();
   const completionRate = schema.status?.completionRate ?? 0;
+
+  // Hydration 완료 체크
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
 
   // 초기화
   useEffect(() => {
@@ -129,8 +135,8 @@ export function ChatWindow({ className }: ChatWindowProps) {
           </div>
         )}
 
-        {/* 제출 가능 시 버튼 표시 */}
-        {canSubmit() && (
+        {/* 제출 가능 시 버튼 표시 (hydration 완료 후에만 렌더링) */}
+        {hasMounted && canSubmit() && (
           <div className="py-4">
             <Button className="w-full h-12 text-base" size="lg">
               견적 요청하기

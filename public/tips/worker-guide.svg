@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none">
+  <!-- Person 1 -->
+  <circle cx="35" cy="35" r="12" fill="#86EFAC"/>
+  <path d="M35 50 L35 75 M35 55 L20 65 M35 55 L50 65 M35 75 L25 95 M35 75 L45 95" stroke="#22C55E" stroke-width="4" stroke-linecap="round"/>
+
+  <!-- Person 2 -->
+  <circle cx="85" cy="35" r="12" fill="#86EFAC"/>
+  <path d="M85 50 L85 75 M85 55 L70 65 M85 55 L100 65 M85 75 L75 95 M85 75 L95 95" stroke="#22C55E" stroke-width="4" stroke-linecap="round"/>
+
+  <!-- Box being carried together -->
+  <rect x="45" y="55" width="30" height="25" rx="3" fill="#FEF3C7" stroke="#F59E0B" stroke-width="2"/>
+  <line x1="50" y1="62" x2="70" y2="62" stroke="#F59E0B" stroke-width="2"/>
+  <line x1="60" y1="55" x2="60" y2="80" stroke="#F59E0B" stroke-width="2"/>
+
+  <!-- Savings badge -->
+  <circle cx="60" cy="105" r="12" fill="#22C55E"/>
+  <text x="60" y="110" text-anchor="middle" fill="white" font-size="14" font-weight="bold">W</text>
+</svg>
