@@ -27,6 +27,8 @@ export function ChatWindow({ className }: ChatWindowProps) {
     inputMode,
     isLoading,
     currentStepId,
+    isInRecoveryMode,
+    currentRecoveryStep,
     initializeChat,
     handleGuidedAnswer,
     revertToStep,
@@ -62,8 +64,12 @@ export function ChatWindow({ className }: ChatWindowProps) {
     prevMessagesLengthRef.current = messages.length;
   }, [messages.length, scrollToBottom]);
 
-  // 현재 Step
-  const currentStep = currentStepId ? getStepById(currentStepId) : null;
+  // 현재 Step (복구 모드일 때는 currentRecoveryStep 사용)
+  const currentStep = isInRecoveryMode && currentRecoveryStep
+    ? currentRecoveryStep
+    : currentStepId
+      ? getStepById(currentStepId)
+      : null;
 
   // 메시지가 Step 입력을 포함하는지 확인
   const lastMessage = messages[messages.length - 1];
