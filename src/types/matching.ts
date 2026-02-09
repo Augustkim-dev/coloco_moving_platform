@@ -19,10 +19,10 @@ export const MATCHING_STATUS_LABELS: Record<MatchingStatus, string> = {
 // 매칭 상태 스타일
 export const MATCHING_STATUS_STYLES: Record<MatchingStatus, string> = {
   pending: 'bg-yellow-100 text-yellow-700',
-  accepted: 'bg-green-100 text-green-700',
+  accepted: 'bg-purple-100 text-purple-700',
   rejected: 'bg-red-100 text-red-700',
   timeout: 'bg-gray-100 text-gray-700',
-  completed: 'bg-blue-100 text-blue-700',
+  completed: 'bg-green-100 text-green-700',
 }
 
 // 확장된 매칭 정보 (업체 정보 포함)

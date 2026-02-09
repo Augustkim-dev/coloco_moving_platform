@@ -1,6 +1,6 @@
 'use client'
 
-import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { Badge } from '@/components/ui/badge'
 import { ChevronRight } from 'lucide-react'
 import type { Database } from '@/types/database'
@@ -8,13 +8,13 @@ import type { Database } from '@/types/database'
 type Estimate = Database['public']['Tables']['estimates']['Row']
 
 // 상태 라벨 및 색상
-const STATUS_STYLES: Record<string, { label: string; variant: 'default' | 'secondary' | 'destructive' | 'outline' }> = {
+const STATUS_STYLES: Record<string, { label: string; variant: 'default' | 'secondary' | 'destructive' | 'outline'; className?: string }> = {
   draft: { label: '작성중', variant: 'secondary' },
-  submitted: { label: '배정대기', variant: 'default' },
+  submitted: { label: '배차대기', variant: 'default' },
   matching: { label: '매칭중', variant: 'default' },
-  matched: { label: '매칭완료', variant: 'default' },
-  assigned: { label: '배정완료', variant: 'outline' },
-  completed: { label: '완료', variant: 'secondary' },
+  matched: { label: '배차완료', variant: 'outline', className: 'bg-purple-100 text-purple-700 border-purple-200' },
+  assigned: { label: '배차완료', variant: 'outline', className: 'bg-purple-100 text-purple-700 border-purple-200' },
+  completed: { label: '완료', variant: 'outline', className: 'bg-green-100 text-green-700 border-green-200' },
   cancelled: { label: '취소', variant: 'destructive' },
 }
 
@@ -43,12 +43,18 @@ interface EstimateTableProps {
 }
 
 export function EstimateTable({ estimates }: EstimateTableProps) {
+  const router = useRouter()
+
   if (estimates.length === 0) {
     return (
       <div className="text-center text-muted-foreground py-12">
         견적 요청이 없습니다.
       </div>
     )
+  }
+
+  const handleRowClick = (estimateId: string) => {
+    router.push(`/admin/estimates/${estimateId}`)
   }
 
   return (
@@ -77,6 +83,7 @@ export function EstimateTable({ estimates }: EstimateTableProps) {
             const status = STATUS_STYLES[estimate.status] || {
               label: estimate.status,
               variant: 'secondary' as const,
+              className: undefined,
             }
 
             const moveType = schemaData?.move?.type
@@ -102,7 +109,8 @@ export function EstimateTable({ estimates }: EstimateTableProps) {
             return (
               <tr
                 key={estimate.id}
-                className="border-b last:border-0 hover:bg-accent/50 transition-colors"
+                className="border-b last:border-0 hover:bg-accent/50 transition-colors cursor-pointer"
+                onClick={() => handleRowClick(estimate.id)}
               >
                 <td className="py-3">
                   <div>
@@ -129,18 +137,13 @@ export function EstimateTable({ estimates }: EstimateTableProps) {
                   </span>
                 </td>
                 <td className="py-3">
-                  <Badge variant={status.variant}>{status.label}</Badge>
+                  <Badge variant={status.variant} className={status.className}>{status.label}</Badge>
                 </td>
                 <td className="py-3 text-right text-sm text-muted-foreground">
                   {new Date(estimate.created_at).toLocaleDateString('ko-KR')}
                 </td>
                 <td className="py-3 pl-2">
-                  <Link
-                    href={`/admin/estimates/${estimate.id}`}
-                    className="inline-flex items-center justify-center w-8 h-8 rounded-md hover:bg-accent"
-                  >
-                    <ChevronRight className="w-4 h-4" />
-                  </Link>
+                  <ChevronRight className="w-4 h-4 text-muted-foreground" />
                 </td>
               </tr>
             )
