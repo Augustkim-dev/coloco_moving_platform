@@ -17,8 +17,7 @@ import type { Carrier } from '@/types/schema';
 import { Phone, CheckCircle, Loader2, AlertCircle } from 'lucide-react';
 
 interface PhoneVerificationProps {
-  onVerified: (data: { name: string; phone: string; carrier: Carrier }) => void;
-  initialName?: string;
+  onVerified: (data: { phone: string; carrier: Carrier }) => void;
   initialPhone?: string;
   initialCarrier?: Carrier | null;
 }
@@ -27,12 +26,10 @@ type VerificationStep = 'input' | 'verify' | 'complete';
 
 export function PhoneVerification({
   onVerified,
-  initialName = '',
   initialPhone = '',
   initialCarrier = null,
 }: PhoneVerificationProps) {
   const [step, setStep] = useState<VerificationStep>('input');
-  const [name, setName] = useState(initialName);
   const [phone, setPhone] = useState(initialPhone);
   const [carrier, setCarrier] = useState<Carrier | null>(initialCarrier);
   const [verificationCode, setVerificationCode] = useState('');
@@ -121,7 +118,6 @@ export function PhoneVerification({
 
       setStep('complete');
       onVerified({
-        name,
         phone,
         carrier: carrier || 'SKT',
       });
@@ -130,7 +126,7 @@ export function PhoneVerification({
     } finally {
       setIsLoading(false);
     }
-  }, [phone, verificationCode, name, carrier, onVerified]);
+  }, [phone, verificationCode, carrier, onVerified]);
 
   // 인증 완료 상태
   if (step === 'complete') {
@@ -161,20 +157,6 @@ export function PhoneVerification({
 
         {step === 'input' && (
           <>
-            {/* 이름 입력 */}
-            <div className="space-y-2">
-              <Label htmlFor="name">이름</Label>
-              <Input
-                id="name"
-                value={name}
-                onChange={(e) => {
-                  setName(e.target.value);
-                  setError(null);
-                }}
-                placeholder="이름을 입력하세요"
-              />
-            </div>
-
             {/* 전화번호 입력 */}
             <div className="space-y-2">
               <Label htmlFor="phone">휴대폰 번호</Label>
@@ -220,7 +202,7 @@ export function PhoneVerification({
             <Button
               className="w-full"
               onClick={sendVerificationCode}
-              disabled={isLoading || !name || !phone || !carrier}
+              disabled={isLoading || !phone || !carrier}
             >
               {isLoading ? (
                 <>

@@ -4,7 +4,7 @@
  * 16개의 질문 Step과 조건부 스킵 로직, TipCard 정의
  */
 
-import type { MovingSchema, TransportMethod } from '@/types/schema';
+import type { MovingSchema } from '@/types/schema';
 
 // ============================================
 // Step 관련 타입 정의
@@ -439,29 +439,38 @@ export const GUIDED_STEPS: GuidedStep[] = [
     },
   },
 
-  // Step 16: 본인 인증
+  // Step 16: 고객명 입력
   {
-    id: 'contact_verification',
+    id: 'customer_name',
     stepNumber: 16,
-    question: '마지막으로 연락처를 확인해주세요',
-    description: '견적을 받으실 연락처를 인증해주세요',
-    inputType: 'phone_verify',
-    schemaPath: 'contact',
+    question: '고객님 성함을 알려주세요',
+    description: '견적서에 표시될 이름이에요',
+    inputType: 'text',
+    schemaPath: 'contact.name',
     required: true,
-    transform: (value, schema) => {
-      // value는 "이름, 전화번호" 형식의 문자열
-      const text = String(value).trim();
-      // 전화번호 패턴 추출 (010-xxxx-xxxx 또는 01012345678)
-      const phoneMatch = text.match(/01[0-9][-\s]?\d{3,4}[-\s]?\d{4}/);
-      const phone = phoneMatch ? phoneMatch[0].replace(/[-\s]/g, '') : null;
-      // 전화번호를 제외한 나머지를 이름으로
-      const name = phoneMatch ? text.replace(phoneMatch[0], '').replace(/[,\s]+/g, ' ').trim() : text;
+    placeholder: '이름 입력 (예: 홍길동)',
+  },
 
+  // Step 17: 전화번호 입력
+  {
+    id: 'phone_number',
+    stepNumber: 17,
+    question: '연락받으실 전화번호를 알려주세요',
+    description: '견적 안내를 받으실 연락처예요',
+    inputType: 'text',
+    schemaPath: 'contact.phone',
+    required: true,
+    placeholder: '휴대폰 번호 입력 (예: 01012345678)',
+    transform: (value, schema) => {
+      // 전화번호 포맷팅 (숫자만 추출 후 하이픈 추가)
+      const numbers = String(value).replace(/[^\d]/g, '');
+      const formatted = numbers.length === 11
+        ? `${numbers.slice(0, 3)}-${numbers.slice(3, 7)}-${numbers.slice(7)}`
+        : numbers;
       return {
         contact: {
           ...schema.contact,
-          name: name || schema.contact.name,
-          phone: phone ? phone.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3') : schema.contact.phone,
+          phone: formatted,
         },
       };
     },

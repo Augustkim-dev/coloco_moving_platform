@@ -6,6 +6,7 @@ import { ButtonList } from './ButtonList';
 import { CardSelector } from './CardSelector';
 import { FloorInput } from './FloorInput';
 import { TipCard } from './TipCard';
+import { PhoneVerification } from './PhoneVerification';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Calendar } from '@/components/ui/calendar';
@@ -209,26 +210,12 @@ export function GuidedStepRenderer({ step, onAnswer }: GuidedStepRendererProps) 
         );
 
       case 'phone_verify':
-        // SMS 인증은 별도 컴포넌트로 구현 예정
         return (
-          <div className="flex flex-col gap-3">
-            <Textarea
-              value={textValue}
-              onChange={(e) => setTextValue(e.target.value)}
-              placeholder="이름, 휴대폰 번호를 입력해주세요"
-              className="min-h-[80px] resize-none"
-            />
-            <Button
-              onClick={handleTextSubmit}
-              disabled={!textValue.trim()}
-              className="w-full"
-            >
-              확인
-            </Button>
-            <p className="text-xs text-muted-foreground text-center">
-              * SMS 인증은 추후 연동됩니다
-            </p>
-          </div>
+          <PhoneVerification
+            onVerified={(data) => {
+              onAnswer(data, data.phone);
+            }}
+          />
         );
 
       default:
