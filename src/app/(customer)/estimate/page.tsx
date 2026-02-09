@@ -1,7 +1,9 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { HybridLayout } from '@/components/estimate';
+import { ManchaloIcon } from '@/components/brand/ManchaloLogo';
 
 export default function EstimatePage() {
   const router = useRouter();
@@ -14,7 +16,11 @@ export default function EstimatePage() {
     <div className="h-[100dvh] flex flex-col">
       {/* 헤더 */}
       <header className="flex items-center justify-between px-4 py-3 border-b bg-background">
-        <h1 className="text-lg font-semibold">견적 신청</h1>
+        <Link href="/" className="flex items-center gap-2">
+          <ManchaloIcon size="sm" />
+          <span className="text-lg font-semibold text-gray-900">만차로</span>
+        </Link>
+        <span className="text-sm text-gray-500">견적 신청</span>
       </header>
 
       {/* 하이브리드 레이아웃 (채팅 + 폼) */}
