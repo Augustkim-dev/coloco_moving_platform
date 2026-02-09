@@ -20,6 +20,7 @@ export interface ParseResult {
   success: boolean;
   data: PartialMovingSchema | null;
   confidence: Record<string, number>;
+  message?: string; // AI가 생성한 사용자 친화적 메시지
   rawResponse?: string;
   error?: string;
 }
@@ -36,9 +37,9 @@ class GeminiClient {
     this.apiKey = apiKey;
     const genAI = new GoogleGenerativeAI(apiKey);
 
-    // Gemini 2.5 Flash 모델 사용 (빠르고 저렴)
+    // Gemini 2.5 Flash 모델 사용 (무료 티어, 최신)
     this.model = genAI.getGenerativeModel({
-      model: 'gemini-2.0-flash',
+      model: 'gemini-2.5-flash',
       generationConfig: {
         temperature: 0.1, // 낮은 온도로 일관된 결과
         topP: 0.8,
@@ -74,11 +75,13 @@ class GeminiClient {
       // 결과 검증 및 변환
       const movingData = this.transformToSchema(parsed);
       const confidenceMap = this.extractConfidence(parsed);
+      const aiMessage = typeof parsed.message === 'string' ? parsed.message : undefined;
 
       return {
         success: true,
         data: movingData,
         confidence: confidenceMap,
+        message: aiMessage,
         rawResponse: text,
       };
     } catch (error) {

@@ -29,6 +29,7 @@ export const MOVING_PARSE_SYSTEM_PROMPT = `당신은 이사 정보를 추출하�
 반드시 아래 JSON 형식으로만 응답하세요:
 
 {
+  "message": "사용자에게 보여줄 친근한 확인 메시지 (예: '원룸 포장이사, 3월 말, 강남→마포로 접수했어요!')",
   "move": {
     "category": "주거 형태 (one_room/two_room/three_room_plus/officetel/apartment/villa_house/office)",
     "type": "이사 형태 (truck/general/half_pack/full_pack/storage)",
@@ -63,10 +64,14 @@ export const MOVING_PARSE_SYSTEM_PROMPT = `당신은 이사 정보를 추출하�
   }
 }
 
-존재하지 않는 필드는 생략하세요.`;
+존재하지 않는 필드는 생략하세요. message 필드는 항상 포함하세요.`;
 
 // 파싱 프롬프트 템플릿
 export const MOVING_PARSE_PROMPT = `${MOVING_PARSE_SYSTEM_PROMPT}
+
+## 오늘 날짜
+
+{TODAY}
 
 ## 사용자 입력
 
@@ -76,9 +81,13 @@ export const MOVING_PARSE_PROMPT = `${MOVING_PARSE_SYSTEM_PROMPT}
 
 /**
  * 사용자 입력으로 프롬프트 포맷팅
+ * 오늘 날짜를 포함하여 상대적 날짜 표현을 정확히 파싱
  */
 export function formatParsePrompt(userInput: string): string {
-  return MOVING_PARSE_PROMPT.replace('{USER_INPUT}', userInput);
+  const today = new Date().toISOString().split('T')[0];
+  return MOVING_PARSE_PROMPT
+    .replace('{TODAY}', today)
+    .replace('{USER_INPUT}', userInput);
 }
 
 // 날짜 추론을 위한 컨텍스트 프롬프트

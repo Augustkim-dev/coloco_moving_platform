@@ -45,6 +45,7 @@ export async function POST(request: NextRequest) {
         success: true,
         data: result.data,
         confidence: result.confidence,
+        message: result.message || '정보를 입력받았어요!',
       });
     }
 

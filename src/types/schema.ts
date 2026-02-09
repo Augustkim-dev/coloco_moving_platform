@@ -6,6 +6,37 @@
  */
 
 // ============================================
+// UUID 생성 헬퍼 (비보안 컨텍스트 지원)
+// ============================================
+
+/**
+ * crypto.randomUUID()는 보안 컨텍스트(HTTPS/localhost)에서만 작동
+ * HTTP + IP 주소 접속 시 폴백 사용
+ */
+export function generateUUID(): string {
+  // 보안 컨텍스트에서는 crypto.randomUUID() 사용
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID();
+  }
+
+  // 폴백: crypto.getRandomValues() 사용
+  if (typeof crypto !== 'undefined' && typeof crypto.getRandomValues === 'function') {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+      const r = crypto.getRandomValues(new Uint8Array(1))[0] % 16;
+      const v = c === 'x' ? r : (r & 0x3) | 0x8;
+      return v.toString(16);
+    });
+  }
+
+  // 최후 폴백: Math.random() (권장하지 않지만 작동은 함)
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    const r = Math.random() * 16 | 0;
+    const v = c === 'x' ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+}
+
+// ============================================
 // Enum 타입 정의
 // ============================================
 
@@ -289,7 +320,7 @@ export function createDefaultSchema(): MovingSchema {
 
   return {
     meta: {
-      requestId: crypto.randomUUID(),
+      requestId: generateUUID(),
       source: 'guided',
       platform: 'mobile',
       createdAt: now,

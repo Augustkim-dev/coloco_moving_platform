@@ -324,8 +324,8 @@ export const useChatStore = create<ChatState>()(
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              userInput: text,
-              currentSchema: estimateStore.schema,
+              message: text,
+              mode: 'parse',
             }),
           });
 
@@ -335,19 +335,28 @@ export const useChatStore = create<ChatState>()(
 
           const result = await response.json();
 
+          // result 구조: { success, data, confidence, message }
+          // data = PartialMovingSchema, confidence = Record<string, number>
           if (result.success && result.data) {
             // 3. AI 파싱 결과 적용
-            const { parsed, fieldConfidence } = result.data;
-            estimateStore.applyAIUpdate(parsed, fieldConfidence);
+            const parsedData = result.data;
+            const fieldConfidence = result.confidence || {};
+            estimateStore.applyAIUpdate(parsedData, fieldConfidence);
 
-            // 4. AI 응답 메시지
+            // 4. 신뢰도 평균 계산
+            const confidenceValues = Object.values(fieldConfidence) as number[];
+            const avgConfidence = confidenceValues.length > 0
+              ? confidenceValues.reduce((a, b) => a + b, 0) / confidenceValues.length
+              : 0;
+
+            // 5. AI 응답 메시지
             get().addMessage({
               role: 'ai',
-              content: result.data.response || '정보를 입력받았어요!',
-              confidence: result.data.avgConfidence,
+              content: result.message || '정보를 입력받았어요!',
+              confidence: avgConfidence,
             });
 
-            // 5. 파싱된 필드에 해당하는 Step 완료 처리
+            // 6. 파싱된 필드에 해당하는 Step 완료 처리
             const completedSteps = new Set(get().completedStepIds);
             for (const path of Object.keys(fieldConfidence)) {
               const step = GUIDED_STEPS.find(
@@ -358,13 +367,20 @@ export const useChatStore = create<ChatState>()(
               }
             }
             set({ completedStepIds: completedSteps });
+          } else {
+            // 파싱 실패 시
+            get().addMessage({
+              role: 'system',
+              content: result.error || '입력을 이해하지 못했어요. 다시 말씀해주세요.',
+            });
           }
 
-          // 6. 다음 Step 표시
+          // 7. 다음 Step 표시
           setTimeout(() => {
             get().showNextStep();
           }, 500);
         } catch (error) {
+          console.error('Free text input error:', error);
           get().addMessage({
             role: 'system',
             content: '죄송해요, 입력을 처리하는 중 오류가 발생했어요. 다시 시도해주세요.',

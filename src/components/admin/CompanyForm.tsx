@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Loader2 } from 'lucide-react'
 import type { Database } from '@/types/database'
+import { generateUUID } from '@/types/schema'
 
 type Company = Database['public']['Tables']['companies']['Row']
 
@@ -118,7 +119,7 @@ export function CompanyForm({ company, isEdit = false }: CompanyFormProps) {
             move_types: moveTypes,
             service_regions: serviceRegions,
             status: status,
-            user_id: crypto.randomUUID(),
+            user_id: generateUUID(),
             vehicles: {},
           })
 
