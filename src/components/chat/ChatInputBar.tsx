@@ -61,7 +61,7 @@ export function ChatInputBar({ className }: ChatInputBarProps) {
           pressed={inputMode === 'guided'}
           onPressedChange={() => setInputMode('guided')}
           size="sm"
-          className="h-7"
+          className="h-7 data-[state=on]:bg-orange-100 data-[state=on]:text-orange-700"
         >
           <MessageSquare className="w-3.5 h-3.5 mr-1" />
           가이드
@@ -70,7 +70,7 @@ export function ChatInputBar({ className }: ChatInputBarProps) {
           pressed={inputMode === 'free_text'}
           onPressedChange={() => setInputMode('free_text')}
           size="sm"
-          className="h-7"
+          className="h-7 data-[state=on]:bg-orange-100 data-[state=on]:text-orange-700"
         >
           <Keyboard className="w-3.5 h-3.5 mr-1" />
           자유 입력
