@@ -7,7 +7,7 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import type { GuidedStep, StepOption } from '@/lib/guided-flow/steps';
-import { getStepById, GUIDED_STEPS } from '@/lib/guided-flow/steps';
+import { getStepById, GUIDED_STEPS, createRecoveryStep } from '@/lib/guided-flow/steps';
 import { useEstimateStore } from './estimateStore';
 
 // ============================================
@@ -57,6 +57,11 @@ export interface ChatState {
 
   // 완료된 Step
   completedStepIds: Set<string>;
+
+  // 복구 모드 상태
+  isInRecoveryMode: boolean;
+  currentRecoveryStep: GuidedStep | null;
+  attemptedRecoveryFields: Set<string>;
 
   // 액션
   addMessage: (message: Omit<ChatMessage, 'id' | 'timestamp'>) => void;
@@ -133,6 +138,9 @@ export const useChatStore = create<ChatState>()(
       isLoading: false,
       currentStepId: null,
       completedStepIds: new Set(),
+      isInRecoveryMode: false,
+      currentRecoveryStep: null,
+      attemptedRecoveryFields: new Set(),
 
       // 메시지 추가
       addMessage: (message) => {
@@ -189,10 +197,8 @@ export const useChatStore = create<ChatState>()(
 
       // 가이드 답변 처리
       handleGuidedAnswer: (stepId, value, displayText) => {
+        const { isInRecoveryMode, currentRecoveryStep } = get();
         const estimateStore = useEstimateStore.getState();
-        const step = getStepById(stepId);
-
-        if (!step) return;
 
         // 1. 사용자 답변 메시지 추가
         get().addMessage({
@@ -202,19 +208,39 @@ export const useChatStore = create<ChatState>()(
           editable: true,
         });
 
-        // 2. 스키마 업데이트 (estimateStore의 engine 사용)
-        const updatedSchema = estimateStore.engine.processAnswer(stepId, value);
+        // 2. 복구 스텝 vs 일반 스텝 처리
+        if (isInRecoveryMode && currentRecoveryStep && stepId === currentRecoveryStep.id) {
+          // 복구 스텝: transform이 있으면 사용, 없으면 setFieldValue 직접 호출
+          if (currentRecoveryStep.transform) {
+            const updates = currentRecoveryStep.transform(value, estimateStore.schema);
+            estimateStore.engine.mergeSchemaUpdates(updates);
+            estimateStore.setSchema(estimateStore.engine.getSchema());
+          } else {
+            estimateStore.setFieldValue(currentRecoveryStep.schemaPath, value, 'guided');
+          }
 
-        // 3. estimateStore 동기화
-        estimateStore.setSchema(updatedSchema);
+          // 복구 스텝 완료 처리
+          set((state) => ({
+            completedStepIds: new Set([...state.completedStepIds, stepId]),
+            currentStepId: stepId,
+            currentRecoveryStep: null,
+          }));
+        } else {
+          // 일반 스텝: engine.processAnswer 사용
+          const step = getStepById(stepId);
+          if (!step) return;
 
-        // 4. Step 완료 처리
-        set((state) => ({
-          completedStepIds: new Set([...state.completedStepIds, stepId]),
-          currentStepId: stepId,
-        }));
+          const updatedSchema = estimateStore.engine.processAnswer(stepId, value);
+          estimateStore.setSchema(updatedSchema);
 
-        // 5. 다음 Step 표시
+          // Step 완료 처리
+          set((state) => ({
+            completedStepIds: new Set([...state.completedStepIds, stepId]),
+            currentStepId: stepId,
+          }));
+        }
+
+        // 3. 다음 Step 표시
         setTimeout(() => {
           get().showNextStep();
         }, 300);
@@ -222,39 +248,82 @@ export const useChatStore = create<ChatState>()(
 
       // 다음 Step 표시
       showNextStep: () => {
-        const { currentStepId, completedStepIds } = get();
+        const { currentStepId, completedStepIds, attemptedRecoveryFields } = get();
         const nextStep = findNextActiveStep(currentStepId, completedStepIds);
 
-        if (!nextStep) {
-          // 모든 Step 완료
-          const estimateStore = useEstimateStore.getState();
-          if (estimateStore.canSubmit()) {
+        if (nextStep) {
+          // 일반 플로우 진행
+          // TipCard가 있으면 먼저 표시
+          if (nextStep.tipCard) {
             get().addMessage({
               role: 'system',
-              content: '모든 정보 입력이 완료되었어요! 아래 버튼을 눌러 견적을 요청해주세요.',
+              content: `💡 ${nextStep.tipCard.title}\n${nextStep.tipCard.description}`,
             });
           }
+
+          // Step 질문 메시지 추가
+          get().addMessage({
+            role: 'system',
+            content: nextStep.question,
+            stepId: nextStep.id,
+            inputComponent: nextStep.inputType,
+            options: nextStep.options,
+          });
+
+          set({ currentStepId: nextStep.id, isInRecoveryMode: false });
           return;
         }
 
-        // TipCard가 있으면 먼저 표시
-        if (nextStep.tipCard) {
-          get().addMessage({
-            role: 'system',
-            content: `💡 ${nextStep.tipCard.title}\n${nextStep.tipCard.description}`,
-          });
+        // 모든 일반 Step 완료 - 복구 모드 확인
+        const estimateStore = useEstimateStore.getState();
+        const missingFields = estimateStore.engine.getMissingRequiredFields();
+
+        // 시도하지 않은 누락 필드 필터링
+        const unAttempted = missingFields.filter(
+          (f) => !attemptedRecoveryFields.has(f.field)
+        );
+
+        if (unAttempted.length > 0) {
+          const nextMissing = unAttempted[0]; // 우선순위순 정렬됨
+          const recoveryStep = createRecoveryStep(nextMissing.field);
+
+          if (recoveryStep) {
+            // 첫 복구 모드 진입 시 안내 메시지
+            if (!get().isInRecoveryMode) {
+              get().addMessage({
+                role: 'system',
+                content: '입력이 누락된 항목이 있어요. 추가 확인이 필요합니다.',
+              });
+            }
+
+            // 복구 질문 표시
+            get().addMessage({
+              role: 'system',
+              content: recoveryStep.question,
+              stepId: recoveryStep.id,
+              inputComponent: recoveryStep.inputType,
+              options: recoveryStep.options,
+            });
+
+            set({
+              currentStepId: recoveryStep.id,
+              isInRecoveryMode: true,
+              currentRecoveryStep: recoveryStep,
+              attemptedRecoveryFields: new Set([...attemptedRecoveryFields, nextMissing.field]),
+            });
+            return;
+          }
         }
 
-        // Step 질문 메시지 추가
-        get().addMessage({
-          role: 'system',
-          content: nextStep.question,
-          stepId: nextStep.id,
-          inputComponent: nextStep.inputType,
-          options: nextStep.options,
-        });
+        // 모든 필수항목 완료 → 제출 가능
+        set({ isInRecoveryMode: false, currentRecoveryStep: null });
 
-        set({ currentStepId: nextStep.id });
+        if (estimateStore.canSubmit()) {
+          get().addMessage({
+            role: 'system',
+            content: '모든 정보 입력이 완료되었어요! 아래 버튼을 눌러 견적을 요청해주세요.',
+          });
+        }
       },
 
       // 이전 Step으로 되돌아가기
@@ -293,6 +362,10 @@ export const useChatStore = create<ChatState>()(
           messages: newMessages,
           completedStepIds: newCompletedStepIds,
           currentStepId: stepId,
+          // 복구 모드 초기화
+          isInRecoveryMode: false,
+          currentRecoveryStep: null,
+          attemptedRecoveryFields: new Set(),
         });
 
         // 4. 해당 Step 다시 표시
@@ -401,6 +474,10 @@ export const useChatStore = create<ChatState>()(
           isLoading: false,
           currentStepId: null,
           completedStepIds: new Set(),
+          // 복구 모드 초기화
+          isInRecoveryMode: false,
+          currentRecoveryStep: null,
+          attemptedRecoveryFields: new Set(),
         });
       },
 
@@ -438,3 +515,9 @@ export const selectCurrentStepId = (state: ChatState) => state.currentStepId;
 
 /** 완료된 Step 셀렉터 */
 export const selectCompletedStepIds = (state: ChatState) => state.completedStepIds;
+
+/** 복구 모드 셀렉터 */
+export const selectIsInRecoveryMode = (state: ChatState) => state.isInRecoveryMode;
+
+/** 현재 복구 스텝 셀렉터 */
+export const selectCurrentRecoveryStep = (state: ChatState) => state.currentRecoveryStep;

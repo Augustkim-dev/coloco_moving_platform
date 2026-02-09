@@ -505,3 +505,118 @@ export function calculateProgress(
   ).length;
   return activeSteps.length > 0 ? completedCount / activeSteps.length : 0;
 }
+
+// ============================================
+// 복구 스텝 설정 (필수 필드 재확인용)
+// ============================================
+
+/** 필드 경로 → 복구 스텝 설정 매핑 */
+export interface RecoveryStepConfig {
+  inputType: StepInputType;
+  question: string;
+  options?: StepOption[];
+  description?: string;
+  placeholder?: string;
+  transform?: GuidedStep['transform'];
+}
+
+export const FIELD_TO_RECOVERY_CONFIG: Record<string, RecoveryStepConfig> = {
+  // 이사 정보
+  'move.category': {
+    inputType: 'card',
+    question: '어떤 공간에서 이사하시나요?',
+    options: GUIDED_STEPS[1].options, // Step 2 재사용
+  },
+  'move.type': {
+    inputType: 'card',
+    question: '어떤 이사 서비스를 원하시나요?',
+    description: '서비스 범위에 따라 가격이 달라져요',
+    options: GUIDED_STEPS[3].options, // Step 4 재사용
+  },
+  'move.schedule': {
+    inputType: 'calendar',
+    question: '이사 예정일이 언제인가요?',
+    description: '날짜가 확정되지 않았다면 대략적인 기간을 선택해주세요',
+  },
+  'move.timeSlot': {
+    inputType: 'button_list',
+    question: '이사 시작 시간대를 선택해주세요',
+    options: GUIDED_STEPS[4].options, // Step 5 재사용
+  },
+
+  // 출발지 정보
+  'departure.address': {
+    inputType: 'address',
+    question: '출발지 주소를 알려주세요',
+    description: '짐을 가져갈 현재 주소예요',
+    placeholder: '주소 검색 (예: 강남구 역삼동)',
+  },
+  'departure.floor': {
+    inputType: 'number',
+    question: '출발지는 몇 층인가요?',
+    description: '지하는 -1, 반지하는 0으로 입력해주세요',
+    placeholder: '층수 입력',
+  },
+  'departure.hasElevator': {
+    inputType: 'button_list',
+    question: '출발지에서 짐을 어떻게 운반하나요?',
+    options: GUIDED_STEPS[6].options, // Step 7 재사용
+    transform: GUIDED_STEPS[6].transform,
+  },
+  'departure.squareFootage': {
+    inputType: 'select',
+    question: '현재 살고 계신 곳의 평수는 어떻게 되나요?',
+    options: GUIDED_STEPS[2].options, // Step 3 재사용
+  },
+
+  // 도착지 정보
+  'arrival.address': {
+    inputType: 'address',
+    question: '도착지 주소를 알려주세요',
+    description: '짐을 옮길 새 주소예요',
+    placeholder: '주소 검색 (예: 마포구 합정동)',
+  },
+  'arrival.floor': {
+    inputType: 'number',
+    question: '도착지는 몇 층인가요?',
+    description: '지하는 -1, 반지하는 0으로 입력해주세요',
+    placeholder: '층수 입력',
+  },
+  'arrival.hasElevator': {
+    inputType: 'button_list',
+    question: '도착지에서 짐을 어떻게 운반하나요?',
+    options: GUIDED_STEPS[9].options, // Step 10 재사용
+    transform: GUIDED_STEPS[9].transform,
+  },
+
+  // 연락처 정보
+  'contact.name': {
+    inputType: 'text',
+    question: '이름을 알려주세요',
+    placeholder: '이름 입력',
+  },
+  'contact.phone': {
+    inputType: 'text',
+    question: '연락처를 알려주세요',
+    placeholder: '휴대폰 번호 입력 (예: 01012345678)',
+  },
+};
+
+/** 필드 경로로부터 복구 스텝 생성 */
+export function createRecoveryStep(fieldPath: string): GuidedStep | null {
+  const config = FIELD_TO_RECOVERY_CONFIG[fieldPath];
+  if (!config) return null;
+
+  return {
+    id: `recovery_${fieldPath.replace(/\./g, '_')}`,
+    stepNumber: 100, // 복구 스텝은 100번대로 표시
+    question: config.question,
+    description: config.description,
+    inputType: config.inputType,
+    options: config.options,
+    schemaPath: fieldPath,
+    required: true,
+    placeholder: config.placeholder,
+    transform: config.transform,
+  };
+}
