@@ -89,10 +89,10 @@ export function ChatWindow({ className }: ChatWindowProps) {
   return (
     <div className={cn('flex flex-col h-full', className)}>
       {/* 진행률 바 */}
-      <div className="px-4 py-3 border-b bg-orange-50">
+      <div className="px-4 py-3 border-b bg-primary/5">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-sm font-medium text-orange-700">입력 진행률</span>
-          <span className="text-sm font-medium text-orange-600">
+          <span className="text-sm font-medium text-primary">입력 진행률</span>
+          <span className="text-sm font-medium text-primary">
             {Math.round(completionRate * 100)}%
           </span>
         </div>

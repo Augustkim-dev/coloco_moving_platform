@@ -20,7 +20,7 @@ export function ManchaloLogo({ size = 'md', showText = true, className }: Mancha
     <div className={cn('flex items-center gap-3', className)}>
       {/* 트럭 아이콘 심볼 */}
       <div className={cn(
-        'relative flex items-center justify-center rounded-xl bg-gradient-to-br from-orange-500 to-orange-600 shadow-lg',
+        'relative flex items-center justify-center rounded-xl bg-gradient-to-br from-primary to-primary/90 shadow-lg',
         config.icon
       )}>
         <svg
@@ -59,7 +59,7 @@ export function ManchaloLogo({ size = 'md', showText = true, className }: Mancha
           <span className={cn('font-bold text-gray-900 tracking-tight', config.text)}>
             만차로
           </span>
-          <span className={cn('text-orange-600 font-medium -mt-1', config.subtext)}>
+          <span className={cn('text-primary font-medium -mt-1', config.subtext)}>
             용달이사 전문
           </span>
         </div>
@@ -77,7 +77,7 @@ export function ManchaloIcon({ size = 'md', className }: { size?: 'sm' | 'md' | 
 
   return (
     <div className={cn(
-      'flex items-center justify-center rounded-lg bg-gradient-to-br from-orange-500 to-orange-600',
+      'flex items-center justify-center rounded-lg bg-gradient-to-br from-primary to-primary/90',
       sizeMap[size],
       className
     )}>

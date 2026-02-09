@@ -39,8 +39,8 @@ export function HybridLayout({ onSubmit }: HybridLayoutProps) {
       <FormSyncWrapper>
         <div className="h-full flex flex-col">
           {/* 진행률 바 (모바일 상단) */}
-          <div className="px-4 py-2 border-b bg-orange-50">
-            <div className="flex items-center justify-between text-xs text-orange-700 mb-1">
+          <div className="px-4 py-2 border-b bg-primary/5">
+            <div className="flex items-center justify-between text-xs text-primary mb-1">
               <span>입력 진행률</span>
               <span className="font-medium">{Math.round(completionRate)}%</span>
             </div>
@@ -73,14 +73,14 @@ export function HybridLayout({ onSubmit }: HybridLayoutProps) {
             <TabsList className="grid grid-cols-2 h-14 rounded-none border-t bg-background">
               <TabsTrigger
                 value="chat"
-                className="flex flex-col gap-0.5 h-full rounded-none data-[state=active]:bg-orange-50 data-[state=active]:text-orange-600"
+                className="flex flex-col gap-0.5 h-full rounded-none data-[state=active]:bg-primary/5 data-[state=active]:text-primary"
               >
                 <MessageSquare className="h-5 w-5" />
                 <span className="text-xs">대화</span>
               </TabsTrigger>
               <TabsTrigger
                 value="form"
-                className="flex flex-col gap-0.5 h-full rounded-none data-[state=active]:bg-orange-50 data-[state=active]:text-orange-600"
+                className="flex flex-col gap-0.5 h-full rounded-none data-[state=active]:bg-primary/5 data-[state=active]:text-primary"
               >
                 <ClipboardList className="h-5 w-5" />
                 <span className="text-xs">폼 입력</span>
@@ -98,8 +98,8 @@ export function HybridLayout({ onSubmit }: HybridLayoutProps) {
       <div className="h-full flex">
         {/* 좌측: 채팅 */}
         <div className="w-1/2 border-r flex flex-col">
-          <div className="px-4 py-2 border-b bg-orange-50">
-            <div className="flex items-center gap-2 text-orange-700">
+          <div className="px-4 py-2 border-b bg-primary/5">
+            <div className="flex items-center gap-2 text-primary">
               <MessageSquare className="h-4 w-4" />
               <span className="text-sm font-medium">가이드 대화</span>
             </div>
@@ -111,13 +111,13 @@ export function HybridLayout({ onSubmit }: HybridLayoutProps) {
 
         {/* 우측: 폼 */}
         <div className="w-1/2 flex flex-col">
-          <div className="px-4 py-2 border-b bg-orange-50">
+          <div className="px-4 py-2 border-b bg-primary/5">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2 text-orange-700">
+              <div className="flex items-center gap-2 text-primary">
                 <ClipboardList className="h-4 w-4" />
                 <span className="text-sm font-medium">견적 정보</span>
               </div>
-              <div className="flex items-center gap-2 text-xs text-orange-600">
+              <div className="flex items-center gap-2 text-xs text-primary">
                 <span className="font-medium">{Math.round(completionRate)}%</span>
                 <Progress value={completionRate} className="w-20 h-1.5" />
               </div>
