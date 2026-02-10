@@ -13,9 +13,10 @@ import { Button } from '@/components/ui/button';
 
 interface ChatWindowProps {
   className?: string;
+  onSubmit?: () => void;
 }
 
-export function ChatWindow({ className }: ChatWindowProps) {
+export function ChatWindow({ className, onSubmit }: ChatWindowProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const stepInputRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -154,9 +155,9 @@ export function ChatWindow({ className }: ChatWindowProps) {
         )}
 
         {/* 제출 가능 시 버튼 표시 (hydration 완료 후에만 렌더링) */}
-        {hasMounted && canSubmit() && (
+        {hasMounted && canSubmit() && onSubmit && (
           <div className="py-4">
-            <Button className="w-full h-12 text-base" size="lg">
+            <Button className="w-full h-12 text-base" size="lg" onClick={onSubmit}>
               견적 요청하기
             </Button>
           </div>

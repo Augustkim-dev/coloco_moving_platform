@@ -58,7 +58,7 @@ export function HybridLayout({ onSubmit }: HybridLayoutProps) {
               value="chat"
               className="flex-1 m-0 overflow-hidden data-[state=inactive]:hidden"
             >
-              <ChatWindow />
+              <ChatWindow onSubmit={onSubmit} />
             </TabsContent>
 
             <TabsContent
@@ -110,7 +110,7 @@ export function HybridLayout({ onSubmit }: HybridLayoutProps) {
               </div>
             </div>
             <div className="flex-1 overflow-hidden">
-              <ChatWindow />
+              <ChatWindow onSubmit={onSubmit} />
             </div>
           </div>
 
