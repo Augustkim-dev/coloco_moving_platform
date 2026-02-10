@@ -1,12 +1,29 @@
 'use client';
 
+import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { HybridLayout } from '@/components/estimate';
 import { ManchaloIcon } from '@/components/brand/ManchaloLogo';
+import { useEstimateStore } from '@/stores/estimateStore';
+import { useChatStore } from '@/stores/chatStore';
 
 export default function EstimatePage() {
   const router = useRouter();
+  const estimateId = useEstimateStore((state) => state.estimateId);
+  const resetSchema = useEstimateStore((state) => state.resetSchema);
+  const clearChat = useChatStore((state) => state.clearChat);
+
+  // 이전 견적이 DB에 저장된 상태(estimateId 존재)로 진입하면 초기화
+  // → 제출 완료 후 다시 돌아왔을 때 깨끗한 폼으로 시작
+  // → 작성 중(미저장) 상태에서는 데이터 유지
+  useEffect(() => {
+    if (estimateId) {
+      resetSchema();
+      clearChat();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleSubmit = () => {
     router.push('/estimate/confirm');
