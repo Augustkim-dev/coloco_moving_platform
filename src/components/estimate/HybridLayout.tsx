@@ -7,6 +7,7 @@ import { FormSyncWrapper, EstimateForm } from '@/components/form';
 import { Progress } from '@/components/ui/progress';
 import { useEstimateStore } from '@/stores/estimateStore';
 import { MessageSquare, ClipboardList } from 'lucide-react';
+import { ManchaloFooterBanner } from '@/components/brand/ManchaloFooterBanner';
 
 // 미디어 쿼리 훅
 function useMediaQuery(query: string): boolean {
@@ -87,6 +88,9 @@ export function HybridLayout({ onSubmit }: HybridLayoutProps) {
               </TabsTrigger>
             </TabsList>
           </Tabs>
+
+          {/* Footer 배너 */}
+          <ManchaloFooterBanner />
         </div>
       </FormSyncWrapper>
     );
@@ -95,38 +99,43 @@ export function HybridLayout({ onSubmit }: HybridLayoutProps) {
   // 데스크톱: 좌우 분할 레이아웃
   return (
     <FormSyncWrapper>
-      <div className="h-full flex">
-        {/* 좌측: 채팅 */}
-        <div className="w-1/2 border-r flex flex-col">
-          <div className="px-4 py-2 border-b bg-primary/5">
-            <div className="flex items-center gap-2 text-primary">
-              <MessageSquare className="h-4 w-4" />
-              <span className="text-sm font-medium">가이드 대화</span>
+      <div className="h-full flex flex-col">
+        <div className="flex-1 flex overflow-hidden">
+          {/* 좌측: 채팅 */}
+          <div className="w-1/2 border-r flex flex-col">
+            <div className="px-4 py-2 border-b bg-primary/5">
+              <div className="flex items-center gap-2 text-primary">
+                <MessageSquare className="h-4 w-4" />
+                <span className="text-sm font-medium">가이드 대화</span>
+              </div>
+            </div>
+            <div className="flex-1 overflow-hidden">
+              <ChatWindow />
             </div>
           </div>
-          <div className="flex-1 overflow-hidden">
-            <ChatWindow />
+
+          {/* 우측: 폼 */}
+          <div className="w-1/2 flex flex-col">
+            <div className="px-4 py-2 border-b bg-primary/5">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 text-primary">
+                  <ClipboardList className="h-4 w-4" />
+                  <span className="text-sm font-medium">견적 정보</span>
+                </div>
+                <div className="flex items-center gap-2 text-xs text-primary">
+                  <span className="font-medium">{Math.round(completionRate)}%</span>
+                  <Progress value={completionRate} className="w-20 h-1.5" />
+                </div>
+              </div>
+            </div>
+            <div className="flex-1 overflow-auto p-4">
+              <EstimateForm onSubmit={onSubmit} />
+            </div>
           </div>
         </div>
 
-        {/* 우측: 폼 */}
-        <div className="w-1/2 flex flex-col">
-          <div className="px-4 py-2 border-b bg-primary/5">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2 text-primary">
-                <ClipboardList className="h-4 w-4" />
-                <span className="text-sm font-medium">견적 정보</span>
-              </div>
-              <div className="flex items-center gap-2 text-xs text-primary">
-                <span className="font-medium">{Math.round(completionRate)}%</span>
-                <Progress value={completionRate} className="w-20 h-1.5" />
-              </div>
-            </div>
-          </div>
-          <div className="flex-1 overflow-auto p-4">
-            <EstimateForm onSubmit={onSubmit} />
-          </div>
-        </div>
+        {/* Footer 배너 */}
+        <ManchaloFooterBanner />
       </div>
     </FormSyncWrapper>
   );
