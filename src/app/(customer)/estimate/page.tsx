@@ -24,7 +24,7 @@ export default function EstimatePage() {
       </header>
 
       {/* 하이브리드 레이아웃 (채팅 + 폼) */}
-      <div className="flex-1 overflow-hidden">
+      <div className="flex-1 min-h-0">
         <HybridLayout onSubmit={handleSubmit} />
       </div>
     </div>
