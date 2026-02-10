@@ -38,9 +38,9 @@ export function HybridLayout({ onSubmit }: HybridLayoutProps) {
   if (isMobile) {
     return (
       <FormSyncWrapper>
-        <div className="h-full flex flex-col">
+        <div className="flex-1 flex flex-col min-h-0">
           {/* 진행률 바 (모바일 상단) */}
-          <div className="px-4 py-2 border-b bg-primary/5">
+          <div className="px-4 py-2 border-b bg-primary/5 shrink-0">
             <div className="flex items-center justify-between text-xs text-primary mb-1">
               <span>입력 진행률</span>
               <span className="font-medium">{Math.round(completionRate)}%</span>
@@ -99,8 +99,8 @@ export function HybridLayout({ onSubmit }: HybridLayoutProps) {
   // 데스크톱: 좌우 분할 레이아웃
   return (
     <FormSyncWrapper>
-      <div className="h-full flex flex-col">
-        <div className="flex-1 flex overflow-hidden">
+      <div className="flex-1 flex flex-col min-h-0">
+        <div className="flex-1 flex min-h-0">
           {/* 좌측: 채팅 */}
           <div className="w-1/2 border-r flex flex-col">
             <div className="px-4 py-2 border-b bg-primary/5">
