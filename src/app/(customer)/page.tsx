@@ -166,10 +166,14 @@ export default function HomePage() {
           <div className="flex justify-center mb-4">
             <ManchaloLogo size="sm" showText={true} className="[&_span]:text-gray-300 [&_span:last-child]:text-primary" />
           </div>
-          <p>© 2026 만차로. All rights reserved.</p>
-          <p className="mt-2">
-            문의: contact@manchalo.kr
-          </p>
+          <div className="space-y-1 text-gray-500">
+            <p>업체명: (주)중기콜 | 대표: 임재득</p>
+            <p>사업자등록번호: 139-81-67365</p>
+            <p>주소: 경기도 광주시 장지 1길 90, 3층(역동)</p>
+            <p>대표전화: 1660-0404 | 통신판매업신고증: 제2024-경기광주-0996호</p>
+            <p>메일: wndrl67365@naver.com</p>
+          </div>
+          <p className="mt-4 text-gray-600">Copyright ⓒ Joongkical all rights reserved.</p>
         </div>
       </footer>
     </div>
