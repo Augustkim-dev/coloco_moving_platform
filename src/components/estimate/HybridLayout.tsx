@@ -52,7 +52,7 @@ export function HybridLayout({ onSubmit }: HybridLayoutProps) {
           <Tabs
             value={activeTab}
             onValueChange={(v) => setActiveTab(v as 'chat' | 'form')}
-            className="flex-1 flex flex-col overflow-hidden"
+            className="flex-1 flex flex-col min-h-0"
           >
             <TabsContent
               value="chat"
@@ -71,7 +71,7 @@ export function HybridLayout({ onSubmit }: HybridLayoutProps) {
             </TabsContent>
 
             {/* 하단 탭 네비게이션 */}
-            <TabsList className="grid grid-cols-2 h-14 rounded-none border-t bg-background">
+            <TabsList className="grid grid-cols-2 h-14 rounded-none border-t bg-background shrink-0">
               <TabsTrigger
                 value="chat"
                 className="flex flex-col gap-0.5 h-full rounded-none data-[state=active]:bg-primary/5 data-[state=active]:text-primary"
@@ -90,7 +90,7 @@ export function HybridLayout({ onSubmit }: HybridLayoutProps) {
           </Tabs>
 
           {/* Footer 배너 */}
-          <ManchaloFooterBanner />
+          <ManchaloFooterBanner className="shrink-0" />
         </div>
       </FormSyncWrapper>
     );
