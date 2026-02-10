@@ -20,7 +20,7 @@ export function CardSelector({
   className,
 }: CardSelectorProps) {
   return (
-    <div className={cn('grid grid-cols-1 sm:grid-cols-2 gap-3', className)}>
+    <div className={cn('grid grid-cols-2 gap-2', className)}>
       {options.map((option) => {
         const isSelected = selectedValue === option.value;
 
@@ -36,11 +36,11 @@ export function CardSelector({
             )}
             onClick={() => onSelect(option.value)}
           >
-            <CardContent className="p-4 relative">
+            <CardContent className="p-2.5 relative">
               {/* 선택 체크 표시 */}
               {isSelected && (
-                <div className="absolute top-2 right-2 w-5 h-5 bg-primary rounded-full flex items-center justify-center">
-                  <Check className="w-3 h-3 text-primary-foreground" />
+                <div className="absolute top-1.5 right-1.5 w-4 h-4 bg-primary rounded-full flex items-center justify-center">
+                  <Check className="w-2.5 h-2.5 text-primary-foreground" />
                 </div>
               )}
 
@@ -60,11 +60,11 @@ export function CardSelector({
               )}
 
               {/* 레이블 */}
-              <h4 className="font-semibold text-sm mb-1">{option.label}</h4>
+              <h4 className="font-medium text-sm mb-0.5">{option.label}</h4>
 
               {/* 설명 */}
               {option.description && (
-                <p className="text-xs text-muted-foreground">
+                <p className="text-[11px] text-muted-foreground leading-tight">
                   {option.description}
                 </p>
               )}

@@ -37,33 +37,6 @@ export function ChatWindow({ className }: ChatWindowProps) {
   const { schema, canSubmit } = useEstimateStore();
   const completionRate = schema.status?.completionRate ?? 0;
 
-  // Hydration 완료 체크
-  useEffect(() => {
-    setHasMounted(true);
-  }, []);
-
-  // 초기화
-  useEffect(() => {
-    initializeChat();
-  }, [initializeChat]);
-
-  // 스크롤 처리 (새 메시지 추가 시에만 스크롤)
-  const scrollToBottom = useCallback(() => {
-    // 스크롤 컨테이너 내에서 하단으로 스크롤
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollTop = scrollContainerRef.current.scrollHeight;
-    }
-  }, []);
-
-  // 새 메시지 추가 시에만 스크롤
-  useEffect(() => {
-    if (messages.length > prevMessagesLengthRef.current) {
-      // 짧은 딜레이 후 스크롤 (DOM 업데이트 대기)
-      setTimeout(scrollToBottom, 100);
-    }
-    prevMessagesLengthRef.current = messages.length;
-  }, [messages.length, scrollToBottom]);
-
   // 현재 Step (복구 모드일 때는 currentRecoveryStep 사용)
   const currentStep = isInRecoveryMode && currentRecoveryStep
     ? currentRecoveryStep
@@ -78,6 +51,45 @@ export function ChatWindow({ className }: ChatWindowProps) {
     lastMessage?.role === 'system' &&
     lastMessage?.stepId &&
     lastMessage?.inputComponent;
+
+  // Hydration 완료 체크
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
+
+  // 초기화
+  useEffect(() => {
+    initializeChat();
+  }, [initializeChat]);
+
+  // 스크롤 처리 (하단으로 스크롤)
+  const scrollToBottom = useCallback(() => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTop = scrollContainerRef.current.scrollHeight;
+    }
+  }, []);
+
+  // Step 입력 UI가 보이도록 스크롤 (상단 기준)
+  const scrollToStepInput = useCallback(() => {
+    if (stepInputRef.current) {
+      stepInputRef.current.scrollIntoView({ behavior: 'instant', block: 'start' });
+    }
+  }, []);
+
+  // 새 메시지 추가 시 스크롤
+  useEffect(() => {
+    if (messages.length > prevMessagesLengthRef.current) {
+      // Step 입력 UI가 있으면 stepInput 상단으로, 없으면 하단으로 스크롤
+      setTimeout(() => {
+        if (showStepInput) {
+          scrollToStepInput();
+        } else {
+          scrollToBottom();
+        }
+      }, 150);
+    }
+    prevMessagesLengthRef.current = messages.length;
+  }, [messages.length, showStepInput, scrollToBottom, scrollToStepInput]);
 
   const handleAnswer = (value: unknown, displayText: string) => {
     if (currentStep) {
