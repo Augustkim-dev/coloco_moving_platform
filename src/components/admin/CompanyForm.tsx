@@ -9,7 +9,6 @@ import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Loader2 } from 'lucide-react'
 import type { Database } from '@/types/database'
-import { generateUUID } from '@/types/schema'
 
 type Company = Database['public']['Tables']['companies']['Row']
 
@@ -93,6 +92,12 @@ export function CompanyForm({ company, isEdit = false }: CompanyFormProps) {
         throw new Error('서비스 지역을 1개 이상 선택해주세요.')
       }
 
+      // 현재 로그인한 사용자 ID 가져오기
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) {
+        throw new Error('로그인이 필요합니다.')
+      }
+
       if (isEdit && company) {
         // 수정
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -109,7 +114,7 @@ export function CompanyForm({ company, isEdit = false }: CompanyFormProps) {
 
         if (updateError) throw updateError
       } else {
-        // 신규 등록 - user_id는 임시 UUID (관리자 등록)
+        // 신규 등록 - user_id는 현재 로그인한 admin의 ID 사용
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const { error: insertError } = await (supabase as any)
           .from('companies')
@@ -119,8 +124,8 @@ export function CompanyForm({ company, isEdit = false }: CompanyFormProps) {
             move_types: moveTypes,
             service_regions: serviceRegions,
             status: status,
-            user_id: generateUUID(),
-            vehicles: {},
+            user_id: user.id,
+            vehicles: [],
           })
 
         if (insertError) throw insertError

@@ -122,6 +122,7 @@ export type Database = {
           expires_at: string | null
           responded_at: string | null
           created_at: string
+          admin_memo: string | null
         }
         Insert: {
           id?: string
@@ -133,6 +134,7 @@ export type Database = {
           expires_at?: string | null
           responded_at?: string | null
           created_at?: string
+          admin_memo?: string | null
         }
         Update: {
           id?: string
@@ -144,6 +146,7 @@ export type Database = {
           expires_at?: string | null
           responded_at?: string | null
           created_at?: string
+          admin_memo?: string | null
         }
       }
       reviews: {

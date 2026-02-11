@@ -134,6 +134,7 @@ export async function POST(request: Request) {
         attempt_number: attemptNumber,
         match_score: null,
         responded_at: new Date().toISOString(),
+        admin_memo: adminMemo || null,
       })
       .select()
       .single()

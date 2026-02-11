@@ -27,9 +27,9 @@ type Estimate = Database['public']['Tables']['estimates']['Row']
 
 const STATUS_LABELS: Record<string, { label: string; color: string }> = {
   draft: { label: '작성중', color: 'bg-gray-100 text-gray-700' },
-  submitted: { label: '배정대기', color: 'bg-yellow-100 text-yellow-700' },
+  submitted: { label: '배차대기', color: 'bg-yellow-100 text-yellow-700' },
   matching: { label: '매칭중', color: 'bg-blue-100 text-blue-700' },
-  matched: { label: '배정완료', color: 'bg-green-100 text-green-700' },
+  matched: { label: '배차완료', color: 'bg-green-100 text-green-700' },
   completed: { label: '완료', color: 'bg-green-100 text-green-700' },
   cancelled: { label: '취소', color: 'bg-red-100 text-red-700' },
 }

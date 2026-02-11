@@ -12,7 +12,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { Loader2, Check, X, Clock, Phone, Calendar, Building2 } from 'lucide-react'
+import { Loader2, Check, X, Clock, Phone, Calendar, Building2, MessageSquare } from 'lucide-react'
 import {
   MATCHING_STATUS_LABELS,
   MATCHING_STATUS_STYLES,
@@ -132,6 +132,19 @@ export function AssignmentStatus({
           )}
         </div>
       </div>
+
+      {/* 관리자 메모 */}
+      {matching.admin_memo && (
+        <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+          <div className="flex items-center gap-2 text-sm font-medium text-blue-700 mb-1">
+            <MessageSquare className="w-4 h-4" />
+            관리자 메모
+          </div>
+          <p className="text-sm text-blue-900 whitespace-pre-wrap">
+            {matching.admin_memo}
+          </p>
+        </div>
+      )}
 
       {/* 에러 메시지 */}
       {error && (

@@ -9,8 +9,8 @@ import { Search, X } from 'lucide-react'
 const STATUS_OPTIONS = [
   { value: 'all', label: '전체 상태' },
   { value: 'draft', label: '작성중' },
-  { value: 'submitted', label: '배정대기' },
-  { value: 'assigned', label: '배정완료' },
+  { value: 'submitted', label: '배차대기' },
+  { value: 'assigned', label: '배차완료' },
   { value: 'completed', label: '완료' },
   { value: 'cancelled', label: '취소' },
 ]

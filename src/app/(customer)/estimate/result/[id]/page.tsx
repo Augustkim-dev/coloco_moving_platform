@@ -24,9 +24,9 @@ type Matching = Database['public']['Tables']['matchings']['Row']
 // 상태 라벨 및 색상
 const STATUS_STYLES: Record<string, { label: string; color: string; icon: typeof CheckCircle }> = {
   draft: { label: '작성중', color: 'bg-gray-100 text-gray-700', icon: Clock },
-  submitted: { label: '배정대기', color: 'bg-yellow-100 text-yellow-700', icon: Clock },
+  submitted: { label: '배차대기', color: 'bg-yellow-100 text-yellow-700', icon: Clock },
   matching: { label: '매칭중', color: 'bg-blue-100 text-blue-700', icon: Clock },
-  matched: { label: '업체배정완료', color: 'bg-green-100 text-green-700', icon: CheckCircle },
+  matched: { label: '배차완료', color: 'bg-green-100 text-green-700', icon: CheckCircle },
   completed: { label: '이사완료', color: 'bg-green-100 text-green-700', icon: CheckCircle },
   cancelled: { label: '취소됨', color: 'bg-red-100 text-red-700', icon: Clock },
 }
