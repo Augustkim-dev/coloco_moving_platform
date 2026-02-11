@@ -401,6 +401,25 @@ export const useChatStore = create<ChatState>()(
       handleFreeTextInput: async (text) => {
         set({ isLoading: true });
 
+        // 0. 현재 Step의 옵션과 로컬 매칭 시도 (AI 호출 불필요)
+        const { currentStepId } = get();
+        if (currentStepId) {
+          const currentStep = getStepById(currentStepId);
+          if (currentStep?.options?.length) {
+            const normalized = text.trim().toLowerCase();
+            const matched = currentStep.options.find(
+              (o) => o.label.toLowerCase() === normalized
+                || o.value.toLowerCase() === normalized
+                || o.label.toLowerCase().includes(normalized)
+            );
+            if (matched) {
+              set({ isLoading: false });
+              get().handleGuidedAnswer(currentStep.id, matched.value, matched.label);
+              return;
+            }
+          }
+        }
+
         // 1. 사용자 메시지 추가
         get().addMessage({
           role: 'user',

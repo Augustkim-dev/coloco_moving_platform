@@ -90,7 +90,7 @@ export function ChatInputBar({ className }: ChatInputBarProps) {
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="예: 원룸이고 3월 말에 강남에서 마포로 포장이사 해요"
+            placeholder="예: 아파트 32평, 3월 15일 오전에 강남구 대치동 12층에서 용인시 수지구 8층으로 포장이사 해요. 냉장고 양문형이랑 피아노 있어요"
             className="min-h-[72px] max-h-[120px] resize-none flex-1"
             disabled={isLoading}
           />
