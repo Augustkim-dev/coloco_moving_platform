@@ -51,21 +51,12 @@ export function ChatInputBar({ className }: ChatInputBarProps) {
   return (
     <div
       className={cn(
-        'sticky bottom-0 bg-background border-t px-4 py-3',
+        'sticky top-0 z-10 bg-background border-b px-4 py-3',
         className
       )}
     >
       {/* 입력 모드 토글 */}
       <div className="flex items-center gap-2 mb-2">
-        <Toggle
-          pressed={inputMode === 'guided'}
-          onPressedChange={() => setInputMode('guided')}
-          size="sm"
-          className="h-7 data-[state=on]:bg-primary/10 data-[state=on]:text-primary"
-        >
-          <MessageSquare className="w-3.5 h-3.5 mr-1" />
-          가이드
-        </Toggle>
         <Toggle
           pressed={inputMode === 'free_text'}
           onPressedChange={() => setInputMode('free_text')}
@@ -74,6 +65,15 @@ export function ChatInputBar({ className }: ChatInputBarProps) {
         >
           <Keyboard className="w-3.5 h-3.5 mr-1" />
           자유 입력
+        </Toggle>
+        <Toggle
+          pressed={inputMode === 'guided'}
+          onPressedChange={() => setInputMode('guided')}
+          size="sm"
+          className="h-7 data-[state=on]:bg-primary/10 data-[state=on]:text-primary"
+        >
+          <MessageSquare className="w-3.5 h-3.5 mr-1" />
+          가이드
         </Toggle>
         <span className="text-xs text-muted-foreground ml-auto">
           {inputMode === 'guided'

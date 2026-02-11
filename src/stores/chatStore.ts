@@ -134,7 +134,7 @@ export const useChatStore = create<ChatState>()(
     (set, get) => ({
       // 초기 상태
       messages: [],
-      inputMode: 'guided',
+      inputMode: 'free_text',
       isLoading: false,
       currentStepId: null,
       completedStepIds: new Set(),
@@ -470,7 +470,7 @@ export const useChatStore = create<ChatState>()(
       clearChat: () => {
         set({
           messages: [],
-          inputMode: 'guided',
+          inputMode: 'free_text',
           isLoading: false,
           currentStepId: null,
           completedStepIds: new Set(),

@@ -118,6 +118,9 @@ export function ChatWindow({ className, onSubmit }: ChatWindowProps) {
         <Progress value={completionRate * 100} className="h-2" />
       </div>
 
+      {/* 입력창 (상단) */}
+      <ChatInputBar />
+
       {/* 메시지 영역 */}
       <div ref={scrollContainerRef} className="flex-1 overflow-y-auto px-4 py-4 space-y-1">
         {messages.map((message) => (
@@ -166,8 +169,6 @@ export function ChatWindow({ className, onSubmit }: ChatWindowProps) {
         <div ref={messagesEndRef} />
       </div>
 
-      {/* 입력창 */}
-      <ChatInputBar />
     </div>
   );
 }
