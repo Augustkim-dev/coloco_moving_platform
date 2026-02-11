@@ -126,6 +126,24 @@ function findNextActiveStep(
 }
 
 // ============================================
+// 질문 힌트 생성
+// ============================================
+
+/** 질문에 선택지 힌트를 추가 (자유입력 시 답변 유도) */
+function buildQuestionWithHint(step: GuidedStep): string {
+  let text = step.question;
+
+  if (step.options?.length) {
+    const labels = step.options.map((o) => o.label).join(', ');
+    text += `\n💡 ${labels} 중에서 알려주세요`;
+  } else if (step.description) {
+    text += `\n💡 ${step.description}`;
+  }
+
+  return text;
+}
+
+// ============================================
 // 스토어 생성
 // ============================================
 
@@ -261,10 +279,10 @@ export const useChatStore = create<ChatState>()(
             });
           }
 
-          // Step 질문 메시지 추가
+          // Step 질문 메시지 추가 (선택지 힌트 포함)
           get().addMessage({
             role: 'system',
-            content: nextStep.question,
+            content: buildQuestionWithHint(nextStep),
             stepId: nextStep.id,
             inputComponent: nextStep.inputType,
             options: nextStep.options,
