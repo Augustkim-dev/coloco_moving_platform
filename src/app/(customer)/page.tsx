@@ -1,5 +1,9 @@
-import Link from "next/link";
+'use client';
+
+import { QRCodeSVG } from 'qrcode.react';
 import { ManchaloLogo } from "@/components/brand/ManchaloLogo";
+
+const PLAY_STORE_URL = "https://play.google.com/store/apps/details?id=com.manchalo.app";
 
 export default function HomePage() {
   return (
@@ -46,21 +50,30 @@ export default function HomePage() {
             </span>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/estimate"
-              className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white bg-primary rounded-xl hover:bg-primary/90 transition-colors shadow-lg shadow-primary/30"
+          {/* 앱 다운로드 CTA */}
+          <div className="flex flex-col items-center gap-5">
+            <button
+              onClick={() => window.open(PLAY_STORE_URL, '_blank')}
+              className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white bg-primary rounded-xl hover:bg-primary/90 transition-colors shadow-lg shadow-primary/30 gap-3"
             >
-              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+              <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M3.609 1.814L13.792 12 3.61 22.186a.996.996 0 01-.61-.92V2.734a1 1 0 01.609-.92zm10.89 10.893l2.302 2.302-10.937 6.333 8.635-8.635zm3.199-3.199l2.302 2.302-2.302 2.302-2.593-2.302 2.593-2.302zM5.864 2.658L16.8 8.99l-2.302 2.302-8.634-8.634z" />
               </svg>
-              무료 견적 신청하기
-            </Link>
-          </div>
+              Google Play에서 다운로드
+            </button>
 
-          <p className="mt-4 text-sm text-gray-500">
-            회원가입 없이 바로 신청 가능해요
-          </p>
+            <div className="bg-white p-4 rounded-2xl shadow-md border border-gray-100">
+              <QRCodeSVG
+                value={PLAY_STORE_URL}
+                size={140}
+                level="M"
+                includeMargin={false}
+              />
+            </div>
+            <p className="text-sm text-gray-500">
+              QR 코드를 스캔하여 앱을 다운로드하세요
+            </p>
+          </div>
         </div>
       </section>
 
@@ -103,15 +116,15 @@ export default function HomePage() {
           <div className="grid md:grid-cols-3 gap-8">
             <FeatureCard
               step={1}
-              icon="💬"
-              title="대화로 간편하게"
-              description="복잡한 폼 입력 대신 대화로 이사 정보를 알려주세요. 버튼 선택만으로 완료!"
+              icon="📲"
+              title="앱 다운로드"
+              description="Google Play에서 만차로 앱을 다운로드하세요. 간편하게 시작할 수 있어요!"
             />
             <FeatureCard
               step={2}
-              icon="🔍"
-              title="조건 맞는 업체 매칭"
-              description="트럭 크기, 이사 날짜, 지역에 맞는 최적의 업체를 연결해드려요."
+              icon="💬"
+              title="대화로 간편하게"
+              description="복잡한 폼 입력 대신 대화로 이사 정보를 알려주세요. 버튼 선택만으로 완료!"
             />
             <FeatureCard
               step={3}
@@ -142,21 +155,34 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* CTA 섹션 */}
+      {/* 앱 다운로드 CTA 섹션 */}
       <section className="py-12 px-4 bg-gray-900 text-white">
         <div className="max-w-2xl mx-auto text-center">
           <h2 className="text-2xl font-bold mb-4">
-            지금 바로 견적 받아보세요
+            만차로 앱을 다운로드하세요
           </h2>
           <p className="text-gray-400 mb-6">
-            3분이면 끝, 부담 없이 상담받으세요
+            앱에서 더 편리하게 용달이사 견적을 받아보세요
           </p>
-          <Link
-            href="/estimate"
-            className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-gray-900 bg-primary/80 rounded-xl hover:bg-primary/70 transition-colors"
-          >
-            무료 견적 시작하기
-          </Link>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+            <button
+              onClick={() => window.open(PLAY_STORE_URL, '_blank')}
+              className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-gray-900 bg-white rounded-xl hover:bg-gray-100 transition-colors gap-3"
+            >
+              <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M3.609 1.814L13.792 12 3.61 22.186a.996.996 0 01-.61-.92V2.734a1 1 0 01.609-.92zm10.89 10.893l2.302 2.302-10.937 6.333 8.635-8.635zm3.199-3.199l2.302 2.302-2.302 2.302-2.593-2.302 2.593-2.302zM5.864 2.658L16.8 8.99l-2.302 2.302-8.634-8.634z" />
+              </svg>
+              Google Play
+            </button>
+            <div className="bg-white p-3 rounded-xl">
+              <QRCodeSVG
+                value={PLAY_STORE_URL}
+                size={100}
+                level="M"
+                includeMargin={false}
+              />
+            </div>
+          </div>
         </div>
       </section>
 
