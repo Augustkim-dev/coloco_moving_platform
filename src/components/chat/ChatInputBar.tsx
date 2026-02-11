@@ -91,7 +91,7 @@ export function ChatInputBar({ className }: ChatInputBarProps) {
             onChange={(e) => setInputText(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="예: 원룸이고 3월 말에 강남에서 마포로 포장이사 해요"
-            className="min-h-[44px] max-h-[120px] resize-none flex-1"
+            className="min-h-[72px] max-h-[120px] resize-none flex-1"
             disabled={isLoading}
           />
           <Button
