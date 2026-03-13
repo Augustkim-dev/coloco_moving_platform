@@ -11,8 +11,17 @@ import { useChatStore } from '@/stores/chatStore';
 export default function EstimatePage() {
   const router = useRouter();
   const estimateId = useEstimateStore((state) => state.estimateId);
+  const vehicleType = useEstimateStore((state) => state.schema.conditions.vehicleType);
   const resetSchema = useEstimateStore((state) => state.resetSchema);
   const clearChat = useChatStore((state) => state.clearChat);
+
+  // 랜딩 위저드를 거치지 않은 경우 랜딩으로 리다이렉트
+  useEffect(() => {
+    if (!vehicleType && !estimateId) {
+      router.replace('/landing');
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // 이전 견적이 DB에 저장된 상태(estimateId 존재)로 진입하면 초기화
   // → 제출 완료 후 다시 돌아왔을 때 깨끗한 폼으로 시작

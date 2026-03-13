@@ -198,16 +198,30 @@ export const useChatStore = create<ChatState>()(
         // 이미 메시지가 있으면 스킵
         if (messages.length > 0) return;
 
-        const firstStep = GUIDED_STEPS[0];
-        if (!firstStep) return;
+        // 랜딩 위저드에서 사전 입력된 데이터 확인
+        const estimateStore = useEstimateStore.getState();
+        const schema = estimateStore.schema;
+        const isFromLanding = schema.conditions.vehicleType !== null;
+
+        // 사전 입력된 스텝을 completedStepIds에 추가
+        const prefilledStepIds = new Set<string>();
+        if (schema.move.category !== 'unknown') prefilledStepIds.add('move_category');
+        if (schema.departure.squareFootage && schema.departure.squareFootage !== 'unknown') prefilledStepIds.add('square_footage');
+        if (schema.move.type !== 'unknown') prefilledStepIds.add('move_type');
+
+        if (prefilledStepIds.size > 0) {
+          set({ completedStepIds: prefilledStepIds });
+        }
 
         // 환영 메시지
         get().addMessage({
           role: 'system',
-          content: '안녕하세요! 이사 견적을 도와드릴게요. 몇 가지 질문에 답해주시면 최적의 업체를 찾아드릴게요.',
+          content: isFromLanding
+            ? '차량 선택이 완료되었어요! 나머지 정보를 입력해주세요.'
+            : '안녕하세요! 이사 견적을 도와드릴게요. 몇 가지 질문에 답해주시면 최적의 업체를 찾아드릴게요.',
         });
 
-        // 첫 Step 표시
+        // 첫 Step 표시 (사전 입력된 스텝은 자동 스킵됨)
         setTimeout(() => {
           get().showNextStep();
         }, 500);

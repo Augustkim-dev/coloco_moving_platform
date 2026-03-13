@@ -6,7 +6,7 @@
 
 import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
-import type { MovingSchema, PartialMovingSchema } from '@/types/schema';
+import type { MovingSchema, PartialMovingSchema, MoveCategory, SquareFootage, MoveType, VehicleType } from '@/types/schema';
 import { createDefaultSchema } from '@/types/schema';
 import {
   GuidedFlowEngine,
@@ -53,6 +53,14 @@ export interface EstimateState {
   // DB 동기화
   syncToDatabase: () => Promise<void>;
   loadFromDatabase: (estimateId: string) => Promise<void>;
+
+  // 랜딩 위저드에서 사전 입력
+  prefillFromLanding: (data: {
+    category: MoveCategory;
+    squareFootage: SquareFootage;
+    moveType: MoveType;
+    vehicleType: VehicleType;
+  }) => void;
 
   // 유틸
   setEstimateId: (id: string | null) => void;
@@ -292,6 +300,42 @@ export const useEstimateStore = create<EstimateState>()(
           } finally {
             set({ isLoading: false });
           }
+        },
+
+        // 랜딩 위저드에서 사전 입력
+        prefillFromLanding: (data) => {
+          // 깨끗한 스키마에서 시작
+          const newSchema = createDefaultSchema();
+          newSchema.move.category = data.category;
+          newSchema.move.type = data.moveType;
+          newSchema.departure.squareFootage = data.squareFootage;
+          newSchema.conditions.vehicleType = data.vehicleType;
+          newSchema.meta.source = 'guided';
+          newSchema.meta.updatedAt = new Date().toISOString();
+
+          const engine = createGuidedFlowEngine(newSchema);
+
+          // 해당 스텝들을 완료 처리
+          engine.processAnswer('move_category', data.category);
+          engine.processAnswer('square_footage', data.squareFootage);
+          engine.processAnswer('move_type', data.moveType);
+
+          const finalSchema = engine.getSchema();
+
+          set({
+            schema: {
+              ...finalSchema,
+              status: {
+                ...finalSchema.status,
+                completionRate: engine.getCompletionRate(),
+                missingRequired: engine.getMissingRequiredFields(),
+                readyForSubmit: engine.canSubmit(),
+              },
+            },
+            estimateId: null,
+            error: null,
+            engine,
+          });
         },
 
         // 유틸

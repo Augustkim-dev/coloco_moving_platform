@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 130" fill="none">
+  <!-- Cargo box -->
+  <rect x="5" y="30" width="150" height="65" rx="4" fill="#F97316" />
+  <!-- Cargo box highlight -->
+  <rect x="5" y="30" width="150" height="10" rx="4" fill="#EA580C" />
+  <!-- Cabin -->
+  <rect x="155" y="40" width="70" height="55" rx="6" fill="#F97316" />
+  <!-- Windshield -->
+  <rect x="165" y="46" width="48" height="25" rx="4" fill="#BFDBFE" />
+  <!-- Headlight -->
+  <rect x="218" y="75" width="8" height="8" rx="2" fill="#FDE68A" />
+  <!-- Wheels -->
+  <circle cx="45" cy="102" r="14" fill="#374151" />
+  <circle cx="45" cy="102" r="6" fill="#9CA3AF" />
+  <circle cx="120" cy="102" r="14" fill="#374151" />
+  <circle cx="120" cy="102" r="6" fill="#9CA3AF" />
+  <circle cx="195" cy="102" r="14" fill="#374151" />
+  <circle cx="195" cy="102" r="6" fill="#9CA3AF" />
+  <!-- Cargo dividers -->
+  <line x1="55" y1="35" x2="55" y2="90" stroke="#EA580C" stroke-width="1.5" />
+  <line x1="105" y1="35" x2="105" y2="90" stroke="#EA580C" stroke-width="1.5" />
+  <!-- Text label -->
+  <text x="120" y="20" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="bold" fill="#374151">1톤 트럭</text>
+</svg>

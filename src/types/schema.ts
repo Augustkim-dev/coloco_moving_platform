@@ -119,6 +119,9 @@ export type ConfidenceSource = 'guided' | 'chat' | 'form' | 'system';
 /** 트럭 대수 선호 */
 export type VehiclePreference = '1' | '2' | 'unknown';
 
+/** 차량 종류 */
+export type VehicleType = 'damas' | 'labo' | '1ton_cargo' | '1ton_wing' | '1.4ton_cargo' | '1.4ton_wing';
+
 /** 운반 방식 */
 export type TransportMethod = 'elevator' | 'stairs' | 'ladder' | 'unknown';
 
@@ -249,6 +252,7 @@ export interface Services {
 export interface Conditions {
   extraRequests: string | null; // 짐 상세 + 요청사항 (필수)
   vehiclePreference: VehiclePreference | null; // 트럭 대수
+  vehicleType: VehicleType | null; // 선택한 차량 종류
   customerParticipation: boolean | null; // 고객 함께 작업 여부
 }
 
@@ -380,6 +384,7 @@ export function createDefaultSchema(): MovingSchema {
     conditions: {
       extraRequests: null,
       vehiclePreference: null,
+      vehicleType: null,
       customerParticipation: null,
     },
     contact: {
@@ -498,3 +503,80 @@ export const CONTACT_TIME_LABELS: Record<ContactTime, string> = {
   afternoon: '오후',
   evening: '저녁',
 };
+
+export const VEHICLE_TYPE_LABELS: Record<VehicleType, string> = {
+  damas: '다마스',
+  labo: '라보',
+  '1ton_cargo': '1톤 카고',
+  '1ton_wing': '1톤 윙바디',
+  '1.4ton_cargo': '1.4톤 카고',
+  '1.4ton_wing': '1.4톤 윙바디',
+};
+
+/** 차량 상세 데이터 */
+export interface VehicleData {
+  type: VehicleType;
+  name: string;
+  description: string;
+  dimensions: string;
+  image: string;
+  startPrice: string;
+  capacity: string;
+}
+
+export const VEHICLE_DATA: VehicleData[] = [
+  {
+    type: 'damas',
+    name: '다마스',
+    description: '소형 가전 가구 1~2개 수납 가능',
+    dimensions: '(1.4~1.7)*1.2*1m',
+    image: '/vehicles/damas.svg',
+    startPrice: '16만원부터',
+    capacity: '객차의 가로세로 높이',
+  },
+  {
+    type: 'labo',
+    name: '라보',
+    description: '소형 가전 가구 적재 가능',
+    dimensions: '1.8*1.3*1.1m',
+    image: '/vehicles/labo.svg',
+    startPrice: '18만원부터',
+    capacity: '적재함의 길이, 너비, 높이',
+  },
+  {
+    type: '1ton_cargo',
+    name: '1톤 카고',
+    description: '대형 가전제품 가구 없이 1인 이사에 적합',
+    dimensions: '2.4*1.4*1.2m',
+    image: '/vehicles/1ton_truck.svg',
+    startPrice: '21만원부터',
+    capacity: '적재함의 길이, 너비, 높이',
+  },
+  {
+    type: '1ton_wing',
+    name: '1톤 윙바디',
+    description: '대형 가전제품 가구 없이 1인 이사에 적합',
+    dimensions: '2.4*1.4*1.2m',
+    image: '/vehicles/1ton_truck.svg',
+    startPrice: '23만원부터',
+    capacity: '적재함의 길이, 너비, 높이',
+  },
+  {
+    type: '1.4ton_cargo',
+    name: '1.4톤 카고',
+    description: '2인 이사에 적합하며 짐과 소량의 가전제품을 적재할 수 있다',
+    dimensions: '(2.0~2.9)*1.4*1.5m',
+    image: '/vehicles/1ton_truck.svg',
+    startPrice: '30만원부터',
+    capacity: '적재함의 길이, 너비, 높이',
+  },
+  {
+    type: '1.4ton_wing',
+    name: '1.4톤 윙바디',
+    description: '가전 가구 2~5개 수납 가능',
+    dimensions: '(2.0~2.9)*1.4*1.5m',
+    image: '/vehicles/1ton_truck.svg',
+    startPrice: '32만원부터',
+    capacity: '차량 가로세로 높이',
+  },
+];

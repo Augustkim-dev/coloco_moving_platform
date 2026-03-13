@@ -358,7 +358,8 @@ export const GUIDED_STEPS: GuidedStep[] = [
     skipCondition: (schema) =>
       schema.move.type === 'full_pack' ||
       schema.move.type === 'half_pack' ||
-      schema.move.type === 'storage',
+      schema.move.type === 'storage' ||
+      schema.conditions.vehicleType !== null, // 랜딩에서 차량 이미 선택됨
     transform: (value, schema) => ({
       conditions: {
         ...schema.conditions,

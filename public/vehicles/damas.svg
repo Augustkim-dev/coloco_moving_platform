@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 120" fill="none">
+  <!-- Body -->
+  <rect x="10" y="40" width="120" height="50" rx="6" fill="#F97316" />
+  <!-- Cabin -->
+  <rect x="130" y="50" width="55" height="40" rx="6" fill="#F97316" />
+  <!-- Window -->
+  <rect x="138" y="55" width="35" height="20" rx="3" fill="#BFDBFE" />
+  <!-- Wheels -->
+  <circle cx="45" cy="95" r="12" fill="#374151" />
+  <circle cx="45" cy="95" r="5" fill="#9CA3AF" />
+  <circle cx="160" cy="95" r="12" fill="#374151" />
+  <circle cx="160" cy="95" r="5" fill="#9CA3AF" />
+  <!-- Cargo area lines -->
+  <line x1="50" y1="45" x2="50" y2="85" stroke="#EA580C" stroke-width="1.5" />
+  <line x1="85" y1="45" x2="85" y2="85" stroke="#EA580C" stroke-width="1.5" />
+  <!-- Text label -->
+  <text x="100" y="25" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="bold" fill="#374151">다마스</text>
+</svg>

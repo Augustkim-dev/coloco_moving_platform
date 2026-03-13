@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 120" fill="none">
+  <!-- Open cargo bed -->
+  <rect x="10" y="50" width="115" height="35" rx="4" fill="#D1D5DB" />
+  <rect x="10" y="45" width="115" height="8" rx="2" fill="#9CA3AF" />
+  <!-- Cabin -->
+  <rect x="125" y="45" width="60" height="40" rx="6" fill="#3B82F6" />
+  <!-- Window -->
+  <rect x="133" y="50" width="40" height="20" rx="3" fill="#BFDBFE" />
+  <!-- Wheels -->
+  <circle cx="40" cy="92" r="12" fill="#374151" />
+  <circle cx="40" cy="92" r="5" fill="#9CA3AF" />
+  <circle cx="160" cy="92" r="12" fill="#374151" />
+  <circle cx="160" cy="92" r="5" fill="#9CA3AF" />
+  <!-- Bed rails -->
+  <line x1="12" y1="45" x2="12" y2="60" stroke="#6B7280" stroke-width="2" />
+  <line x1="123" y1="45" x2="123" y2="60" stroke="#6B7280" stroke-width="2" />
+  <!-- Text label -->
+  <text x="100" y="25" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="bold" fill="#374151">라보</text>
+</svg>
