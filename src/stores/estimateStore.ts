@@ -60,6 +60,7 @@ export interface EstimateState {
     squareFootage: SquareFootage;
     moveType: MoveType;
     vehicleType: VehicleType;
+    moveDate: string;
   }) => void;
 
   // 유틸
@@ -310,12 +311,24 @@ export const useEstimateStore = create<EstimateState>()(
           newSchema.move.type = data.moveType;
           newSchema.departure.squareFootage = data.squareFootage;
           newSchema.conditions.vehicleType = data.vehicleType;
+          newSchema.move.schedule = {
+            dateType: 'exact',
+            date: data.moveDate,
+            dateFrom: null,
+            dateTo: null,
+          };
           newSchema.meta.source = 'guided';
           newSchema.meta.updatedAt = new Date().toISOString();
 
           const engine = createGuidedFlowEngine(newSchema);
 
           // 해당 스텝들을 완료 처리
+          engine.processAnswer('move_date', {
+            dateType: 'exact',
+            date: data.moveDate,
+            dateFrom: null,
+            dateTo: null,
+          });
           engine.processAnswer('move_category', data.category);
           engine.processAnswer('square_footage', data.squareFootage);
           engine.processAnswer('move_type', data.moveType);

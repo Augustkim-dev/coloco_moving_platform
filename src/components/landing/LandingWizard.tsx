@@ -9,10 +9,11 @@ import { useChatStore } from '@/stores/chatStore';
 import { HousingTypeStep } from './HousingTypeStep';
 import { SquareFootageStep } from './SquareFootageStep';
 import { MoveTypeStep } from './MoveTypeStep';
+import { MoveDateStep } from './MoveDateStep';
 import { VehicleSelectStep } from './VehicleSelectStep';
 import { ManchaloLogo } from '@/components/brand/ManchaloLogo';
 
-const STEP_TITLES = ['주거형태', '평수', '이사형태', '차량선택'];
+const STEP_TITLES = ['주거형태', '평수', '이사형태', '이사예정일', '차량선택'];
 
 export function LandingWizard() {
   const router = useRouter();
@@ -23,6 +24,7 @@ export function LandingWizard() {
   const [category, setCategory] = useState<MoveCategory | undefined>();
   const [squareFootage, setSquareFootage] = useState<SquareFootage | undefined>();
   const [moveType, setMoveType] = useState<MoveType | undefined>();
+  const [moveDate, setMoveDate] = useState<string | undefined>();
 
   const handleHousingSelect = (value: MoveCategory) => {
     setCategory(value);
@@ -39,8 +41,13 @@ export function LandingWizard() {
     setTimeout(() => setStep(3), 200);
   };
 
+  const handleDateSelect = (date: string) => {
+    setMoveDate(date);
+    setTimeout(() => setStep(4), 200);
+  };
+
   const handleVehicleSelect = (value: VehicleType) => {
-    if (!category || !squareFootage || !moveType) return;
+    if (!category || !squareFootage || !moveType || !moveDate) return;
 
     // 스토어에 사전 입력 반영 + 채팅 초기화
     clearChat();
@@ -49,6 +56,7 @@ export function LandingWizard() {
       squareFootage,
       moveType,
       vehicleType: value,
+      moveDate,
     });
 
     router.push('/estimate');
@@ -118,6 +126,9 @@ export function LandingWizard() {
           <MoveTypeStep onSelect={handleMoveTypeSelect} selected={moveType} />
         )}
         {step === 3 && (
+          <MoveDateStep onSelect={handleDateSelect} selected={moveDate} />
+        )}
+        {step === 4 && (
           <VehicleSelectStep onSelect={handleVehicleSelect} />
         )}
       </main>

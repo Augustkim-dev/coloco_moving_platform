@@ -49,7 +49,7 @@ export function VehicleSelectStep({ onSelect }: VehicleSelectStepProps) {
               <div className="flex-1 p-3 flex flex-col justify-between">
                 <div>
                   <h3 className="font-bold text-gray-900">
-                    {vehicle.name}은 {vehicle.startPrice} 시작한다.
+                    {vehicle.name}
                   </h3>
                   <p className="text-xs text-gray-500 mt-1">{vehicle.description}</p>
                   <div className="mt-2 text-xs text-gray-400">

@@ -106,8 +106,9 @@ function findNextActiveStep(
   );
 
   if (!currentStepId) {
-    // 첫 Step 반환
-    return activeSteps[0] ?? null;
+    // 첫 미완료 Step 반환
+    const firstUncompleted = activeSteps.find((s) => !completedStepIds.has(s.id));
+    return firstUncompleted ?? null;
   }
 
   const currentIndex = activeSteps.findIndex((s) => s.id === currentStepId);
@@ -205,6 +206,7 @@ export const useChatStore = create<ChatState>()(
 
         // 사전 입력된 스텝을 completedStepIds에 추가
         const prefilledStepIds = new Set<string>();
+        if (schema.move.schedule.date) prefilledStepIds.add('move_date');
         if (schema.move.category !== 'unknown') prefilledStepIds.add('move_category');
         if (schema.departure.squareFootage && schema.departure.squareFootage !== 'unknown') prefilledStepIds.add('square_footage');
         if (schema.move.type !== 'unknown') prefilledStepIds.add('move_type');
