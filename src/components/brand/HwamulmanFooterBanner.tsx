@@ -2,11 +2,11 @@
 
 import { cn } from '@/lib/utils';
 
-interface ManchaloFooterBannerProps {
+interface HwamulmanFooterBannerProps {
   className?: string;
 }
 
-export function ManchaloFooterBanner({ className }: ManchaloFooterBannerProps) {
+export function HwamulmanFooterBanner({ className }: HwamulmanFooterBannerProps) {
   return (
     <div
       className={cn(
@@ -16,7 +16,6 @@ export function ManchaloFooterBanner({ className }: ManchaloFooterBannerProps) {
       )}
     >
       <div className="flex items-center justify-center gap-2 px-4 py-3 opacity-30">
-        {/* 트럭 아이콘 */}
         <svg
           viewBox="0 0 24 24"
           fill="none"
@@ -32,7 +31,7 @@ export function ManchaloFooterBanner({ className }: ManchaloFooterBannerProps) {
           <circle cx="5" cy="17.5" r="1.5" fill="white" />
           <circle cx="15" cy="17.5" r="1.5" fill="white" />
         </svg>
-        <span className="text-gray-400 font-medium text-xs">만차로</span>
+        <span className="text-gray-400 font-medium text-xs">화물맨</span>
       </div>
     </div>
   );

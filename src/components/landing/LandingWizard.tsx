@@ -11,7 +11,7 @@ import { SquareFootageStep } from './SquareFootageStep';
 import { MoveTypeStep } from './MoveTypeStep';
 import { MoveDateStep } from './MoveDateStep';
 import { VehicleSelectStep } from './VehicleSelectStep';
-import { ManchaloLogo } from '@/components/brand/ManchaloLogo';
+import { HwamulmanLogo } from '@/components/brand/HwamulmanLogo';
 
 const STEP_TITLES = ['주거형태', '평수', '이사형태', '이사예정일', '차량선택'];
 
@@ -78,7 +78,7 @@ export function LandingWizard() {
           <div className="w-7" />
         )}
         <div className="flex-1 flex justify-center">
-          <ManchaloLogo size="sm" />
+          <HwamulmanLogo size="sm" />
         </div>
         <div className="w-7" />
       </header>

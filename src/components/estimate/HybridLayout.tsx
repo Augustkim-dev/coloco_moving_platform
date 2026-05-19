@@ -7,7 +7,7 @@ import { FormSyncWrapper, EstimateForm } from '@/components/form';
 import { Progress } from '@/components/ui/progress';
 import { useEstimateStore } from '@/stores/estimateStore';
 import { MessageSquare, ClipboardList } from 'lucide-react';
-import { ManchaloFooterBanner } from '@/components/brand/ManchaloFooterBanner';
+import { HwamulmanFooterBanner } from '@/components/brand/HwamulmanFooterBanner';
 
 // 미디어 쿼리 훅
 function useMediaQuery(query: string): boolean {
@@ -90,7 +90,7 @@ export function HybridLayout({ onSubmit }: HybridLayoutProps) {
           </Tabs>
 
           {/* Footer 배너 */}
-          <ManchaloFooterBanner className="shrink-0" />
+          <HwamulmanFooterBanner className="shrink-0" />
         </div>
       </FormSyncWrapper>
     );
@@ -135,7 +135,7 @@ export function HybridLayout({ onSubmit }: HybridLayoutProps) {
         </div>
 
         {/* Footer 배너 */}
-        <ManchaloFooterBanner />
+        <HwamulmanFooterBanner />
       </div>
     </FormSyncWrapper>
   );

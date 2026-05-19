@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { HybridLayout } from '@/components/estimate';
-import { ManchaloIcon } from '@/components/brand/ManchaloLogo';
+import { HwamulmanIcon } from '@/components/brand/HwamulmanLogo';
 import { useEstimateStore } from '@/stores/estimateStore';
 import { useChatStore } from '@/stores/chatStore';
 
@@ -43,8 +43,8 @@ export default function EstimatePage() {
       {/* 헤더 */}
       <header className="flex items-center justify-between px-4 py-3 border-b border-primary/20 bg-gradient-to-r from-primary/5 to-primary/10">
         <Link href="/" className="flex items-center gap-2">
-          <ManchaloIcon size="sm" />
-          <span className="text-lg font-semibold text-gray-900">만차로</span>
+          <HwamulmanIcon size="sm" />
+          <span className="text-lg font-semibold text-gray-900">화물맨</span>
         </Link>
         <span className="text-sm text-primary font-medium">견적 신청</span>
       </header>

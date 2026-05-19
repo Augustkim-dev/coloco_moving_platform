@@ -1,7 +1,7 @@
 'use client';
 
 import { LandingWizard } from '@/components/landing/LandingWizard';
-import { ManchaloLogo } from '@/components/brand/ManchaloLogo';
+import { HwamulmanLogo } from '@/components/brand/HwamulmanLogo';
 
 export default function LandingPage() {
   return (
@@ -12,7 +12,7 @@ export default function LandingPage() {
       <footer className="py-8 px-4 bg-gray-900 text-gray-400 border-t border-gray-800">
         <div className="max-w-4xl mx-auto text-center text-sm">
           <div className="flex justify-center mb-4">
-            <ManchaloLogo size="sm" showText={true} className="[&_span]:text-gray-300 [&_span:last-child]:text-primary" />
+            <HwamulmanLogo size="sm" showText={true} className="[&_span]:text-gray-300 [&_span:last-child]:text-primary" />
           </div>
           <div className="space-y-1 text-gray-500">
             <p>업체명: (주)중기콜 | 대표: 임재득</p>

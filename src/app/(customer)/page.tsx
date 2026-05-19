@@ -1,78 +1,194 @@
 'use client';
 
+import Image from 'next/image';
 import { QRCodeSVG } from 'qrcode.react';
-import { ManchaloLogo } from "@/components/brand/ManchaloLogo";
+import { HwamulmanLogo } from "@/components/brand/HwamulmanLogo";
 
 const PLAY_STORE_URL = "https://play.google.com/store/apps/details?id=com.manchalo.app";
+
+const WIZARD_STEPS = [
+  { no: '01', img: '/landing/step-01-home.png',     label: '주거형태',   desc: '원룸, 아파트, 빌라 등 선택' },
+  { no: '02', img: '/landing/step-02-area.png',     label: '평수',       desc: '이사할 공간의 평수 선택' },
+  { no: '03', img: '/landing/step-03-movetype.png', label: '이사형태',   desc: '용달이사, 일반이사, 학생이사 등 선택' },
+  { no: '04', img: '/landing/step-04-date.png',     label: '이사예정일', desc: '이사 날짜 선택' },
+  { no: '05', img: '/landing/step-05-vehicle.png',  label: '차량선택',   desc: '맞춤 차량 선택 후 견적 확인' },
+];
 
 export default function HomePage() {
   return (
     <div className="flex flex-col min-h-screen">
-      {/* 히어로 섹션 */}
-      <section className="flex-1 flex flex-col items-center justify-center px-4 py-16 bg-gradient-to-b from-primary/5 to-white">
-        <div className="max-w-2xl mx-auto text-center">
-          {/* 만차로 로고 */}
-          <div className="flex justify-center mb-8">
-            <ManchaloLogo size="xl" />
-          </div>
+      {/* 히어로 배너 */}
+      <section className="px-4 py-8 md:py-12 bg-gradient-to-b from-sky-50 via-white to-white">
+        <div className="max-w-6xl mx-auto">
+          <div className="rounded-3xl bg-white shadow-xl border border-gray-100 overflow-hidden">
+            <div className="grid md:grid-cols-2 gap-0">
+              {/* 좌측: 타이틀 + 5단계 */}
+              <div className="px-6 py-8 md:px-10 md:py-12 flex flex-col gap-6">
+                {/* 카테고리 태그 라인 */}
+                <div className="inline-flex items-center self-start gap-2 px-4 py-2 rounded-full bg-primary text-white text-xs md:text-sm font-medium">
+                  <span>·</span>
+                  <span>용달이사</span>
+                  <span>·</span>
+                  <span>일반이사</span>
+                  <span>·</span>
+                  <span className="text-yellow-300 font-bold">학생이사</span>
+                  <span>·</span>
+                  <span>원룸이사</span>
+                  <span>·</span>
+                </div>
 
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
-            용달이사,
-            <br />
-            <span className="text-primary">이제 쉽고 빠르게!</span>
-          </h1>
+                {/* 메인 타이틀 */}
+                <div>
+                  <h1 className="text-3xl md:text-5xl font-black text-gray-900 leading-tight tracking-tight">
+                    화물맨 이사
+                  </h1>
+                  <h1 className="text-3xl md:text-5xl font-black leading-tight tracking-tight">
+                    <span className="text-blue-500">직접입력</span>
+                    <span className="text-gray-900"> 서비스</span>
+                  </h1>
+                </div>
 
-          <p className="text-lg text-gray-600 mb-4">
-            복잡한 견적 비교는 이제 그만!
-            <br />
-            <span className="font-semibold text-primary">1톤~5톤 트럭</span>, 조건에 맞는 업체를 바로 연결해드려요.
-          </p>
+                {/* 서브카피 */}
+                <p className="text-base md:text-lg text-gray-700 leading-relaxed">
+                  고객이 직접 이사정보를 입력하면
+                  <br />
+                  <span className="font-bold text-primary">맞춤 차량과 이사 견적</span>을 빠르게 받을 수 있습니다!
+                </p>
 
-          {/* 핵심 가치 제안 */}
-          <div className="flex flex-wrap justify-center gap-3 mb-8">
-            <span className="inline-flex items-center px-4 py-2 bg-primary/10 text-primary rounded-full text-sm font-medium">
-              <svg className="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-              </svg>
-              용달이사 특화
-            </span>
-            <span className="inline-flex items-center px-4 py-2 bg-primary/10 text-primary rounded-full text-sm font-medium">
-              <svg className="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-              </svg>
-              3분 만에 견적
-            </span>
-            <span className="inline-flex items-center px-4 py-2 bg-primary/10 text-primary rounded-full text-sm font-medium">
-              <svg className="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-              </svg>
-              검증된 업체만
-            </span>
-          </div>
+                {/* 5단계 비주얼 */}
+                <div className="mt-2 md:mt-4">
+                  <div className="flex items-start justify-between gap-1 md:gap-2 flex-wrap md:flex-nowrap">
+                    {WIZARD_STEPS.map((step, i) => (
+                      <div key={step.no} className="flex items-start gap-1 md:gap-2 flex-1 min-w-0">
+                        <div className="flex flex-col items-center text-center min-w-0 flex-1">
+                          <div className="relative w-14 h-14 md:w-16 md:h-16 rounded-full shadow-md mb-2 overflow-hidden">
+                            <Image
+                              src={step.img}
+                              alt={step.label}
+                              fill
+                              sizes="64px"
+                              className="object-cover"
+                            />
+                          </div>
+                          <div className="text-[10px] md:text-xs font-semibold text-gray-500">{step.no}</div>
+                          <div className="text-xs md:text-sm font-bold text-gray-900 mt-0.5">{step.label}</div>
+                          <div className="hidden md:block text-[10px] text-gray-500 mt-1 leading-tight">{step.desc}</div>
+                        </div>
+                        {i < WIZARD_STEPS.length - 1 && (
+                          <div className="hidden sm:flex pt-5 md:pt-6 text-primary text-xl md:text-2xl font-bold">›</div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
 
-          {/* 앱 다운로드 CTA */}
-          <div className="flex flex-col items-center gap-5">
-            <button
-              onClick={() => window.open(PLAY_STORE_URL, '_blank')}
-              className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white bg-primary rounded-xl hover:bg-primary/90 transition-colors shadow-lg shadow-primary/30 gap-3"
-            >
-              <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M3.609 1.814L13.792 12 3.61 22.186a.996.996 0 01-.61-.92V2.734a1 1 0 01.609-.92zm10.89 10.893l2.302 2.302-10.937 6.333 8.635-8.635zm3.199-3.199l2.302 2.302-2.302 2.302-2.593-2.302 2.593-2.302zM5.864 2.658L16.8 8.99l-2.302 2.302-8.634-8.634z" />
-              </svg>
-              Google Play에서 다운로드
-            </button>
+              {/* 우측: 일러스트 + 체크리스트 */}
+              <div className="relative px-6 py-8 md:px-10 md:py-12 bg-gradient-to-br from-sky-50 to-blue-50/50 flex flex-col gap-6">
+                {/* 둥근 말풍선 배지 */}
+                <div className="absolute top-4 right-4 md:top-6 md:right-6 z-10 transform -rotate-6">
+                  <div className="w-24 h-24 md:w-28 md:h-28 rounded-full bg-primary shadow-lg flex flex-col items-center justify-center text-center px-2">
+                    <span className="text-[10px] md:text-xs font-medium text-white leading-tight">
+                      간편하게
+                      <br />
+                      입력하고
+                    </span>
+                    <span className="text-xs md:text-sm font-black text-yellow-300 mt-0.5 underline decoration-yellow-300 underline-offset-2">
+                      빠른 견적 받자!
+                    </span>
+                  </div>
+                </div>
 
-            <div className="bg-white p-4 rounded-2xl shadow-md border border-gray-100">
-              <QRCodeSVG
-                value={PLAY_STORE_URL}
-                size={140}
-                level="M"
-                includeMargin={false}
-              />
+                {/* 트럭 일러스트 */}
+                <div className="relative w-full max-w-md mx-auto aspect-[4/3]">
+                  <Image
+                    src="/landing/hero-truck.png"
+                    alt="화물맨 이사 서비스"
+                    fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    className="object-contain"
+                    priority
+                  />
+                </div>
+
+                {/* 체크리스트 */}
+                <ul className="space-y-2.5 mt-2">
+                  <li className="flex items-center gap-2.5">
+                    <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center text-sm font-bold">✓</span>
+                    <span className="text-base md:text-lg font-bold text-gray-900">간편한 직접입력</span>
+                  </li>
+                  <li className="flex items-center gap-2.5">
+                    <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center text-sm font-bold">✓</span>
+                    <span className="text-base md:text-lg font-bold text-gray-900">맞춤 차량 매칭</span>
+                  </li>
+                  <li className="flex items-center gap-2.5">
+                    <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center text-sm font-bold">✓</span>
+                    <span className="text-base md:text-lg font-bold text-gray-900">빠른 견적 확인</span>
+                  </li>
+                </ul>
+
+                {/* 친절한 상담 박스 */}
+                <div className="flex items-center gap-3 px-4 py-3 bg-yellow-50 border border-yellow-200 rounded-2xl">
+                  <span className="text-2xl">🎧</span>
+                  <div className="flex flex-col">
+                    <span className="text-sm md:text-base font-bold text-gray-900">친절한 상담</span>
+                    <span className="text-xs md:text-sm text-gray-700">전국 어디서나 OK!</span>
+                  </div>
+                </div>
+              </div>
             </div>
-            <p className="text-sm text-gray-500">
-              QR 코드를 스캔하여 앱을 다운로드하세요
-            </p>
+          </div>
+
+          {/* 로고 + 앱 다운로드 CTA */}
+          <div className="mt-10 md:mt-14 flex flex-col items-center text-center">
+            <div className="flex justify-center mb-6">
+              <HwamulmanLogo size="lg" />
+            </div>
+
+            <div className="flex flex-wrap justify-center gap-3 mb-8">
+              <span className="inline-flex items-center px-4 py-2 bg-primary/10 text-primary rounded-full text-sm font-medium">
+                <svg className="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+                용달이사 특화
+              </span>
+              <span className="inline-flex items-center px-4 py-2 bg-primary/10 text-primary rounded-full text-sm font-medium">
+                <svg className="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+                3분 만에 견적
+              </span>
+              <span className="inline-flex items-center px-4 py-2 bg-primary/10 text-primary rounded-full text-sm font-medium">
+                <svg className="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+                검증된 업체만
+              </span>
+            </div>
+
+            <div className="flex flex-col items-center gap-5">
+              <button
+                onClick={() => window.open(PLAY_STORE_URL, '_blank')}
+                className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white bg-primary rounded-xl hover:bg-primary/90 transition-colors shadow-lg shadow-primary/30 gap-3"
+              >
+                <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M3.609 1.814L13.792 12 3.61 22.186a.996.996 0 01-.61-.92V2.734a1 1 0 01.609-.92zm10.89 10.893l2.302 2.302-10.937 6.333 8.635-8.635zm3.199-3.199l2.302 2.302-2.302 2.302-2.593-2.302 2.593-2.302zM5.864 2.658L16.8 8.99l-2.302 2.302-8.634-8.634z" />
+                </svg>
+                Google Play에서 다운로드
+              </button>
+
+              <div className="bg-white p-4 rounded-2xl shadow-md border border-gray-100">
+                <QRCodeSVG
+                  value={PLAY_STORE_URL}
+                  size={140}
+                  level="M"
+                  includeMargin={false}
+                />
+              </div>
+              <p className="text-sm text-gray-500">
+                QR 코드를 스캔하여 앱을 다운로드하세요
+              </p>
+            </div>
           </div>
         </div>
       </section>
@@ -81,7 +197,7 @@ export default function HomePage() {
       <section className="py-12 px-4 bg-primary text-white">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-2xl font-bold mb-4">
-            왜 만차로인가요?
+            왜 화물맨인가요?
           </h2>
           <p className="text-lg text-white/80 mb-6">
             용달이사에 가장 최적화된 서비스
@@ -118,7 +234,7 @@ export default function HomePage() {
               step={1}
               icon="📲"
               title="앱 다운로드"
-              description="Google Play에서 만차로 앱을 다운로드하세요. 간편하게 시작할 수 있어요!"
+              description="Google Play에서 화물맨 앱을 다운로드하세요. 간편하게 시작할 수 있어요!"
             />
             <FeatureCard
               step={2}
@@ -159,7 +275,7 @@ export default function HomePage() {
       <section className="py-12 px-4 bg-gray-900 text-white">
         <div className="max-w-2xl mx-auto text-center">
           <h2 className="text-2xl font-bold mb-4">
-            만차로 앱을 다운로드하세요
+            화물맨 앱을 다운로드하세요
           </h2>
           <p className="text-gray-400 mb-6">
             앱에서 더 편리하게 용달이사 견적을 받아보세요
@@ -190,7 +306,7 @@ export default function HomePage() {
       <footer className="py-8 px-4 bg-gray-900 text-gray-400 border-t border-gray-800">
         <div className="max-w-4xl mx-auto text-center text-sm">
           <div className="flex justify-center mb-4">
-            <ManchaloLogo size="sm" showText={true} className="[&_span]:text-gray-300 [&_span:last-child]:text-primary" />
+            <HwamulmanLogo size="sm" showText={true} className="[&_span]:text-gray-300 [&_span:last-child]:text-primary" />
           </div>
           <div className="space-y-1 text-gray-500">
             <p>업체명: (주)중기콜 | 대표: 임재득</p>
